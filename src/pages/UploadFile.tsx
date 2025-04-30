@@ -10,40 +10,32 @@ import { Upload } from "lucide-react";
 interface FileUploadRowProps {
   title: string;
   allowedExtensions: string[];
-  onClientNameChange: (value: string) => void;
-  onSystemIdChange: (value: string) => void;
-  onSystemReleaseChange: (value: string) => void;
-  onFileChange: (file: File | null) => void;
-  clientName: string;
-  systemId: string;
-  systemRelease: string;
+  onFileUpload: (clientName: string, systemId: string, systemRelease: string, file: File | null) => void;
 }
 
 const FileUploadRow: React.FC<FileUploadRowProps> = ({
   title,
   allowedExtensions,
-  onClientNameChange,
-  onSystemIdChange,
-  onSystemReleaseChange,
-  onFileChange,
-  clientName,
-  systemId,
-  systemRelease,
+  onFileUpload,
 }) => {
   const { toast } = useToast();
+  const [clientName, setClientName] = useState<string>("");
+  const [systemId, setSystemId] = useState<string>("");
+  const [systemRelease, setSystemRelease] = useState<string>("");
+  const [file, setFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState<string>("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
+    const selectedFile = e.target.files?.[0] || null;
     
-    if (!file) {
-      onFileChange(null);
+    if (!selectedFile) {
+      setFile(null);
       setFileName("");
       return;
     }
     
     // Check file extension
-    const extension = file.name.split(".").pop()?.toLowerCase() || "";
+    const extension = selectedFile.name.split(".").pop()?.toLowerCase() || "";
     
     if (!allowedExtensions.includes(`.${extension}`)) {
       toast({
@@ -52,96 +44,16 @@ const FileUploadRow: React.FC<FileUploadRowProps> = ({
         variant: "destructive",
       });
       e.target.value = "";
-      onFileChange(null);
+      setFile(null);
       setFileName("");
       return;
     }
     
-    onFileChange(file);
-    setFileName(file.name);
+    setFile(selectedFile);
+    setFileName(selectedFile.name);
   };
 
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 p-4 border-b border-gray-200 items-center">
-      <div className="text-sm font-medium">{title}</div>
-      
-      <div>
-        <Input
-          type="text"
-          placeholder="Client Name *"
-          value={clientName}
-          onChange={(e) => onClientNameChange(e.target.value)}
-          required
-          className="border-belize-300"
-        />
-      </div>
-      
-      <div>
-        <Input
-          type="text"
-          placeholder="System SID *"
-          value={systemId}
-          maxLength={10}
-          onChange={(e) => onSystemIdChange(e.target.value)}
-          required
-          className="border-belize-300"
-        />
-      </div>
-      
-      <div>
-        <Input
-          type="text"
-          placeholder="System Release Info *"
-          value={systemRelease}
-          onChange={(e) => onSystemReleaseChange(e.target.value)}
-          required
-          className="border-belize-300"
-        />
-      </div>
-      
-      <div className="flex items-center space-x-2">
-        <div className="relative w-full">
-          <input
-            type="file"
-            id={`file-${title.replace(/\s+/g, '-').toLowerCase()}`}
-            className="sr-only"
-            onChange={handleFileChange}
-            accept={allowedExtensions.join(",")}
-          />
-          <Label
-            htmlFor={`file-${title.replace(/\s+/g, '-').toLowerCase()}`}
-            className="cursor-pointer flex items-center justify-center w-full px-4 py-2 text-sm bg-belize-100 hover:bg-belize-200 text-belize-800 rounded-md border border-belize-300"
-          >
-            <Upload className="h-4 w-4 mr-2" />
-            {fileName ? fileName : "Choose File"}
-          </Label>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const UploadFile = () => {
-  const { toast } = useToast();
-  
-  // Common state for all rows
-  const [clientName, setClientName] = useState<string>("");
-  const [systemId, setSystemId] = useState<string>("");
-  const [systemRelease, setSystemRelease] = useState<string>("");
-  
-  // File states for each row
-  const [fileUploads, setFileUploads] = useState<{
-    [key: string]: File | null;
-  }>({
-    roleObjectsFile: null,
-    roleAuthFile: null,
-    roleFioriFile: null,
-    masterDerivedFile: null,
-    userDetailsFile: null,
-    userRoleFile: null,
-  });
-
-  const handleUpload = async () => {
+  const handleUpload = () => {
     // Validate inputs
     if (!clientName.trim()) {
       toast({
@@ -170,27 +82,99 @@ const UploadFile = () => {
       return;
     }
 
-    // Check if at least one file is selected
-    if (Object.values(fileUploads).every((file) => file === null)) {
+    if (!file) {
       toast({
-        title: "No Files Selected",
-        description: "Please select at least one file to upload",
+        title: "No File Selected",
+        description: "Please select a file to upload",
         variant: "destructive",
       });
       return;
     }
 
-    // In a real implementation, you would use FormData to send the files to your backend
+    onFileUpload(clientName, systemId, systemRelease, file);
+  };
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-6 gap-4 p-4 border-b border-gray-200 items-center">
+      <div className="text-sm font-medium">{title}</div>
+      
+      <div>
+        <Input
+          type="text"
+          placeholder="Client Name *"
+          value={clientName}
+          onChange={(e) => setClientName(e.target.value)}
+          required
+          className="border-belize-300"
+        />
+      </div>
+      
+      <div>
+        <Input
+          type="text"
+          placeholder="System SID *"
+          value={systemId}
+          maxLength={10}
+          onChange={(e) => setSystemId(e.target.value)}
+          required
+          className="border-belize-300"
+        />
+      </div>
+      
+      <div>
+        <Input
+          type="text"
+          placeholder="System Release Info *"
+          value={systemRelease}
+          onChange={(e) => setSystemRelease(e.target.value)}
+          required
+          className="border-belize-300"
+        />
+      </div>
+      
+      <div className="relative">
+        <input
+          type="file"
+          id={`file-${title.replace(/\s+/g, '-').toLowerCase()}`}
+          className="sr-only"
+          onChange={handleFileChange}
+          accept={allowedExtensions.join(",")}
+        />
+        <Label
+          htmlFor={`file-${title.replace(/\s+/g, '-').toLowerCase()}`}
+          className="cursor-pointer flex items-center justify-center w-full px-4 py-2 text-sm bg-belize-100 hover:bg-belize-200 text-belize-800 rounded-md border border-belize-300"
+        >
+          <Upload className="h-4 w-4 mr-2" />
+          {fileName ? fileName : "Choose File"}
+        </Label>
+      </div>
+      
+      <div>
+        <Button 
+          onClick={handleUpload} 
+          className="bg-belize-300 hover:bg-belize-400 text-white w-full"
+        >
+          Upload File
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+const UploadFile = () => {
+  const { toast } = useToast();
+
+  const handleFileUpload = (clientName: string, systemId: string, systemRelease: string, file: File | null) => {
     toast({
       title: "Upload Started",
-      description: "Your files are being uploaded and processed...",
+      description: `Uploading ${file?.name} for ${clientName} - ${systemId}...`,
     });
 
     // Simulate API call
     setTimeout(() => {
       toast({
         title: "Upload Complete",
-        description: "Your files have been uploaded successfully!",
+        description: "Your file has been uploaded successfully!",
       });
     }, 2000);
   };
@@ -205,92 +189,51 @@ const UploadFile = () => {
 
         <div className="table-container">
           <div className="bg-gray-50 p-4 border-b border-gray-200 font-medium">
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-6 gap-4">
               <div>Data Type</div>
               <div>Client Name <span className="text-red-500">*</span></div>
               <div>System SID <span className="text-red-500">*</span></div>
               <div>System Release Info <span className="text-red-500">*</span></div>
               <div>File</div>
+              <div>Action</div>
             </div>
           </div>
 
           <FileUploadRow
             title="FUE License Roles & Objects Mapping Data"
             allowedExtensions={[".xml"]}
-            clientName={clientName}
-            systemId={systemId}
-            systemRelease={systemRelease}
-            onClientNameChange={(value) => setClientName(value)}
-            onSystemIdChange={(value) => setSystemId(value)}
-            onSystemReleaseChange={(value) => setSystemRelease(value)}
-            onFileChange={(file) => setFileUploads({ ...fileUploads, roleObjectsFile: file })}
+            onFileUpload={handleFileUpload}
           />
 
           <FileUploadRow
             title="Role Authorization Object Mapping Data"
             allowedExtensions={[".csv", ".xlsx"]}
-            clientName={clientName}
-            systemId={systemId}
-            systemRelease={systemRelease}
-            onClientNameChange={(value) => setClientName(value)}
-            onSystemIdChange={(value) => setSystemId(value)}
-            onSystemReleaseChange={(value) => setSystemRelease(value)}
-            onFileChange={(file) => setFileUploads({ ...fileUploads, roleAuthFile: file })}
+            onFileUpload={handleFileUpload}
           />
 
           <FileUploadRow
             title="Role Fiori Apps Mapping data"
             allowedExtensions={[".csv", ".xlsx"]}
-            clientName={clientName}
-            systemId={systemId}
-            systemRelease={systemRelease}
-            onClientNameChange={(value) => setClientName(value)}
-            onSystemIdChange={(value) => setSystemId(value)}
-            onSystemReleaseChange={(value) => setSystemRelease(value)}
-            onFileChange={(file) => setFileUploads({ ...fileUploads, roleFioriFile: file })}
+            onFileUpload={handleFileUpload}
           />
 
           <FileUploadRow
             title="Master & Derived Role Mapping Data"
             allowedExtensions={[".csv", ".xlsx"]}
-            clientName={clientName}
-            systemId={systemId}
-            systemRelease={systemRelease}
-            onClientNameChange={(value) => setClientName(value)}
-            onSystemIdChange={(value) => setSystemId(value)}
-            onSystemReleaseChange={(value) => setSystemRelease(value)}
-            onFileChange={(file) => setFileUploads({ ...fileUploads, masterDerivedFile: file })}
+            onFileUpload={handleFileUpload}
           />
 
           <FileUploadRow
             title="User Details Data"
             allowedExtensions={[".csv", ".xlsx"]}
-            clientName={clientName}
-            systemId={systemId}
-            systemRelease={systemRelease}
-            onClientNameChange={(value) => setClientName(value)}
-            onSystemIdChange={(value) => setSystemId(value)}
-            onSystemReleaseChange={(value) => setSystemRelease(value)}
-            onFileChange={(file) => setFileUploads({ ...fileUploads, userDetailsFile: file })}
+            onFileUpload={handleFileUpload}
           />
 
           <FileUploadRow
             title="User Role Mapping Data"
             allowedExtensions={[".csv", ".xlsx"]}
-            clientName={clientName}
-            systemId={systemId}
-            systemRelease={systemRelease}
-            onClientNameChange={(value) => setClientName(value)}
-            onSystemIdChange={(value) => setSystemId(value)}
-            onSystemReleaseChange={(value) => setSystemRelease(value)}
-            onFileChange={(file) => setFileUploads({ ...fileUploads, userRoleFile: file })}
+            onFileUpload={handleFileUpload}
           />
-        </div>
-
-        <div className="flex justify-end mt-6">
-          <Button onClick={handleUpload} className="bg-belize-300 hover:bg-belize-400 text-white">
-            Upload Files
-          </Button>
         </div>
       </div>
     </Layout>

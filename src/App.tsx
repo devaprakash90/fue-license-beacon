@@ -8,9 +8,10 @@ import Index from "./pages/Index";
 import UploadFile from "./pages/UploadFile";
 import UploadStatus from "./pages/UploadStatus";
 import ManageData from "./pages/ManageData";
-import DeleteData from "./pages/DeleteData";
 import RoleOptimization from "./pages/RoleOptimization";
 import UserOptimization from "./pages/UserOptimization";
+import LogManagement from "./pages/LogManagement";
+import ViewLogs from "./pages/ViewLogs";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,9 +27,10 @@ const App = () => (
           <Route path="/upload-file" element={<UploadFile />} />
           <Route path="/upload-status" element={<UploadStatus />} />
           <Route path="/manage-data" element={<ManageData />} />
-          <Route path="/delete-data" element={<DeleteData />} />
           <Route path="/role-optimization" element={<RoleOptimization />} />
           <Route path="/user-optimization" element={<UserOptimization />} />
+          <Route path="/log-management" element={<LogManagement />} />
+          <Route path="/view-logs" element={<ViewLogs />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -2,7 +2,7 @@
 import React from "react";
 import Layout from "@/components/Layout";
 import FeatureCard from "@/components/FeatureCard";
-import { Upload, FileText, Database, UserCog, User } from "lucide-react";
+import { Upload, FileText, Database, UserCog, User, BarChart, ListFilter } from "lucide-react";
 
 const Index = () => {
   return (
@@ -51,6 +51,26 @@ const Index = () => {
               description="Optimize license assignments at user level"
               link="/user-optimization"
               icon={<User size={24} />}
+            />
+          </div>
+        </section>
+
+        {/* Troubleshooting & Logs Section */}
+        <section>
+          <h2 className="section-title">Troubleshooting & Logs</h2>
+          <div className="card-grid">
+            <FeatureCard 
+              title="Log Management" 
+              description="Manage system logs and troubleshooting data"
+              link="/log-management"
+              icon={<BarChart size={24} />}
+            />
+            
+            <FeatureCard 
+              title="View Logs" 
+              description="View and analyze detailed system logs"
+              link="/view-logs"
+              icon={<ListFilter size={24} />}
             />
           </div>
         </section>
