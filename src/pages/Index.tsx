@@ -1,13 +1,68 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React from "react";
+import Layout from "@/components/Layout";
+import FeatureCard from "@/components/FeatureCard";
+import { Upload, FileText, Database, Trash, UserCog, User } from "lucide-react";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <Layout title="Welcome to FUE License Optimizer" showBackButton={false}>
+      <div className="space-y-8">
+        {/* Master Data Section */}
+        <section>
+          <h2 className="section-title">Master Data</h2>
+          <div className="card-grid">
+            <FeatureCard 
+              title="Upload File" 
+              description="Upload files with the latest data"
+              link="/upload-file"
+              icon={<Upload size={24} />}
+            />
+            
+            <FeatureCard 
+              title="File Upload Status" 
+              description="Monitor and verify file upload status"
+              link="/upload-status"
+              icon={<FileText size={24} />}
+            />
+            
+            <FeatureCard 
+              title="Manage Data" 
+              description="Download and maintain uploaded data"
+              link="/manage-data"
+              icon={<Database size={24} />}
+            />
+            
+            <FeatureCard 
+              title="Delete Data" 
+              description="Clean up unnecessary data"
+              link="/delete-data"
+              icon={<Trash size={24} />}
+            />
+          </div>
+        </section>
+        
+        {/* License Optimizer Section */}
+        <section>
+          <h2 className="section-title">License Optimizer</h2>
+          <div className="card-grid">
+            <FeatureCard 
+              title="Role Level Optimization" 
+              description="Optimize license assignments at role level"
+              link="/role-optimization"
+              icon={<UserCog size={24} />}
+            />
+            
+            <FeatureCard 
+              title="User Level Optimization" 
+              description="Optimize license assignments at user level"
+              link="/user-optimization"
+              icon={<User size={24} />}
+            />
+          </div>
+        </section>
       </div>
-    </div>
+    </Layout>
   );
 };
 
