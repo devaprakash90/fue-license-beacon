@@ -26,16 +26,16 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				belize: {
-					50: '#e6f7ff',
-					100: '#bae8ff',
-					200: '#7dd5f9',
-					300: '#33C3F0', // Sky Blue
-					400: '#1EAEDB', // Bright Blue
-					500: '#0EA5E9', // Ocean Blue (Primary)
-					600: '#0284c7',
-					700: '#0369a1',
-					800: '#075985',
-					900: '#0c4a6e',
+					50: '#f0f7fb',
+					100: '#e0eff7',
+					200: '#C6DFF0',
+					300: '#A9C6DE', // Primary Color
+					400: '#90b4d9',
+					500: '#70a4d9',
+					600: '#5887c1',
+					700: '#4a6da9',
+					800: '#3e5886',
+					900: '#394c6c',
 				},
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',

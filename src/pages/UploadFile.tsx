@@ -68,28 +68,34 @@ const FileUploadRow: React.FC<FileUploadRowProps> = ({
       <div>
         <Input
           type="text"
-          placeholder="Client Name"
+          placeholder="Client Name *"
           value={clientName}
           onChange={(e) => onClientNameChange(e.target.value)}
+          required
+          className="border-belize-300"
         />
       </div>
       
       <div>
         <Input
           type="text"
-          placeholder="System SID"
+          placeholder="System SID *"
           value={systemId}
           maxLength={10}
           onChange={(e) => onSystemIdChange(e.target.value)}
+          required
+          className="border-belize-300"
         />
       </div>
       
       <div>
         <Input
           type="text"
-          placeholder="System Release Info"
+          placeholder="System Release Info *"
           value={systemRelease}
           onChange={(e) => onSystemReleaseChange(e.target.value)}
+          required
+          className="border-belize-300"
         />
       </div>
       
@@ -194,15 +200,16 @@ const UploadFile = () => {
       <div className="space-y-6 bg-white shadow-md rounded-lg p-6">
         <p className="text-gray-600 mb-4">
           Upload your data files to populate the system. Please ensure that files are in the correct format.
+          <span className="text-red-500 ml-1">*</span> indicates required fields.
         </p>
 
         <div className="table-container">
           <div className="bg-gray-50 p-4 border-b border-gray-200 font-medium">
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
               <div>Data Type</div>
-              <div>Client Name</div>
-              <div>System SID</div>
-              <div>System Release Info</div>
+              <div>Client Name <span className="text-red-500">*</span></div>
+              <div>System SID <span className="text-red-500">*</span></div>
+              <div>System Release Info <span className="text-red-500">*</span></div>
               <div>File</div>
             </div>
           </div>
@@ -281,7 +288,7 @@ const UploadFile = () => {
         </div>
 
         <div className="flex justify-end mt-6">
-          <Button onClick={handleUpload} className="bg-belize-500 hover:bg-belize-600">
+          <Button onClick={handleUpload} className="bg-belize-300 hover:bg-belize-400 text-white">
             Upload Files
           </Button>
         </div>

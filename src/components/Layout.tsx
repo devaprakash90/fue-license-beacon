@@ -16,7 +16,7 @@ const Layout: React.FC<LayoutProps> = ({ children, title, showBackButton = true 
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-belize-500 text-white shadow-md">
+      <header className="bg-belize-300 text-white shadow-md">
         <div className="page-container">
           <div className="flex items-center justify-between py-4">
             <Link to="/" className="flex items-center space-x-2 text-xl font-bold">

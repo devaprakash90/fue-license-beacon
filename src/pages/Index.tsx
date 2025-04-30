@@ -2,7 +2,7 @@
 import React from "react";
 import Layout from "@/components/Layout";
 import FeatureCard from "@/components/FeatureCard";
-import { Upload, FileText, Database, Trash, UserCog, User } from "lucide-react";
+import { Upload, FileText, Database, UserCog, User } from "lucide-react";
 
 const Index = () => {
   return (
@@ -31,13 +31,6 @@ const Index = () => {
               description="Download and maintain uploaded data"
               link="/manage-data"
               icon={<Database size={24} />}
-            />
-            
-            <FeatureCard 
-              title="Delete Data" 
-              description="Clean up unnecessary data"
-              link="/delete-data"
-              icon={<Trash size={24} />}
             />
           </div>
         </section>
