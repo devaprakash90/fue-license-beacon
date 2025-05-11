@@ -10,6 +10,8 @@ import UploadStatus from "./pages/UploadStatus";
 import ManageData from "./pages/ManageData";
 import RoleOptimization from "./pages/RoleOptimization";
 import UserOptimization from "./pages/UserOptimization";
+import RoleOptimizationResults from "./pages/RoleOptimizationResults";
+import UserOptimizationResults from "./pages/UserOptimizationResults";
 import LogManagement from "./pages/LogManagement";
 import ViewLogs from "./pages/ViewLogs";
 import NotFound from "./pages/NotFound";
@@ -29,6 +31,8 @@ const App = () => (
           <Route path="/manage-data" element={<ManageData />} />
           <Route path="/role-optimization" element={<RoleOptimization />} />
           <Route path="/user-optimization" element={<UserOptimization />} />
+          <Route path="/role-optimization-results/:requestId" element={<RoleOptimizationResults />} />
+          <Route path="/user-optimization-results/:requestId" element={<UserOptimizationResults />} />
           <Route path="/log-management" element={<LogManagement />} />
           <Route path="/view-logs" element={<ViewLogs />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
