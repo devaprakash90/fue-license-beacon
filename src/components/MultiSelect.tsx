@@ -30,13 +30,16 @@ interface MultiSelectProps {
 }
 
 const MultiSelect: React.FC<MultiSelectProps> = ({
-  options,
+  options = [], // Provide default empty array to prevent undefined errors
   placeholder = "Select items...",
-  selectedValues,
+  selectedValues = [], // Provide default empty array for selectedValues
   onSelectionChange,
   className,
 }) => {
   const [open, setOpen] = useState(false);
+
+  // Ensure options is always an array
+  const safeOptions = Array.isArray(options) ? options : [];
 
   const toggleOption = (value: string) => {
     if (selectedValues.includes(value)) {
@@ -46,8 +49,9 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
     }
   };
 
+  // Safely get selected labels
   const selectedLabels = selectedValues
-    .map(value => options.find(option => option.value === value)?.label)
+    .map(value => safeOptions.find(option => option.value === value)?.label)
     .filter(Boolean)
     .join(", ");
 
@@ -69,7 +73,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
           <CommandInput placeholder={`Search ${placeholder.toLowerCase()}...`} />
           <CommandEmpty>No items found.</CommandEmpty>
           <CommandGroup className="max-h-64 overflow-y-auto">
-            {options.map((option) => (
+            {safeOptions.map((option) => (
               <CommandItem
                 key={option.value}
                 value={option.value}
