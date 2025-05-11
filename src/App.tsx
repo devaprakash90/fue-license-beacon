@@ -14,7 +14,7 @@ import UserOptimizationResults from "./pages/UserOptimizationResults";
 import LogManagement from "./pages/LogManagement";
 import ViewLogs from "./pages/ViewLogs";
 import NotFound from "./pages/NotFound";
-import { TooltipProvider } from "@radix-ui/react-tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const queryClient = new QueryClient();
 
