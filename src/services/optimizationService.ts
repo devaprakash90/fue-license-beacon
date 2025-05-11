@@ -55,7 +55,7 @@ export const getOptimizationRequests = async (
     .order('created_at', { ascending: false });
   
   if (error) throw error;
-  return data || [];
+  return data as unknown as OptimizationRequest[] || [];
 };
 
 export const getRoleOptimizationResults = async (
