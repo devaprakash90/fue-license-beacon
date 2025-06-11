@@ -70,7 +70,7 @@ export const createOptimizationRequest = async (
       .single();
     
     if (error) throw error;
-    return data.id;
+    return data?.id || crypto.randomUUID();
   } catch (error) {
     console.error("Error creating optimization request:", error);
     // Generate a mock UUID for development purposes
@@ -89,7 +89,7 @@ export const getOptimizationRequests = async (
       .order('created_at', { ascending: false });
     
     if (error) throw error;
-    return data as unknown as OptimizationRequest[] || [];
+    return (data || []) as OptimizationRequest[];
   } catch (error) {
     console.error(`Error fetching ${requestType} optimization requests:`, error);
     
@@ -127,7 +127,7 @@ export const getRoleOptimizationResults = async (
       .eq('request_id', requestId);
     
     if (error) throw error;
-    return data || [];
+    return (data || []) as RoleOptimizationResult[];
   } catch (error) {
     console.error("Error fetching role optimization results:", error);
     
@@ -175,7 +175,7 @@ export const getUserOptimizationResults = async (
       .eq('request_id', requestId);
     
     if (error) throw error;
-    return data || [];
+    return (data || []) as UserOptimizationResult[];
   } catch (error) {
     console.error("Error fetching user optimization results:", error);
     
