@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,13 +14,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ArrowLeft, Loader2 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { ArrowLeft, Loader2, Calculator } from "lucide-react";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { getRoleOptimizationResults } from "@/services/optimizationService";
+import { generateSimulation } from "@/services/simulationService";
 import { RoleOptimizationResult } from "@/types/optimization";
+import { useToast } from "@/hooks/use-toast";
 
 const RoleOptimizationResults = () => {
   const { requestId } = useParams<{ requestId: string }>();
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [showReducibleOnly, setShowReducibleOnly] = useState(false);
   
@@ -28,6 +32,24 @@ const RoleOptimizationResults = () => {
     queryKey: ['roleOptimizationResults', requestId],
     queryFn: () => getRoleOptimizationResults(requestId!),
     enabled: !!requestId,
+  });
+
+  const simulationMutation = useMutation({
+    mutationFn: () => generateSimulation(requestId!),
+    onSuccess: () => {
+      toast({
+        title: "Simulation Generated",
+        description: "Your simulation results are ready for review.",
+      });
+      navigate(`/simulation-results/${requestId}`);
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to generate simulation. Please try again.",
+        variant: "destructive",
+      });
+    }
   });
   
   // Filter results based on search term and reducible checkbox
@@ -77,6 +99,26 @@ const RoleOptimizationResults = () => {
               <Label htmlFor="reducibleOnly">
                 Show only roles with reducible licenses
               </Label>
+            </div>
+
+            <div className="flex justify-end">
+              <Button 
+                onClick={() => simulationMutation.mutate()}
+                disabled={simulationMutation.isPending}
+                className="flex items-center gap-2"
+              >
+                {simulationMutation.isPending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Calculator className="h-4 w-4" />
+                    View Simulation
+                  </>
+                )}
+              </Button>
             </div>
           </div>
         </div>

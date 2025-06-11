@@ -2,7 +2,7 @@
 import React from "react";
 import Layout from "@/components/Layout";
 import FeatureCard from "@/components/FeatureCard";
-import { Upload, FileText, Database, UserCog, User, BarChart, ListFilter } from "lucide-react";
+import { Upload, FileText, Database, UserCog, User, BarChart, ListFilter, Calculator } from "lucide-react";
 
 const Index = () => {
   return (
@@ -51,6 +51,13 @@ const Index = () => {
               description="Optimize license assignments at user level"
               link="/user-optimization"
               icon={<User size={24} />}
+            />
+
+            <FeatureCard 
+              title="Simulation Results" 
+              description="View simulation results and impact analysis"
+              link="/simulation-results"
+              icon={<Calculator size={24} />}
             />
           </div>
         </section>
