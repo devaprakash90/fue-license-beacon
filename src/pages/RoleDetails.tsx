@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, pencil, save } from "lucide-react";
+import { ArrowLeft, Pencil, Save } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const RoleDetails = () => {
@@ -120,7 +120,7 @@ const RoleDetails = () => {
           <div className="flex items-center gap-2">
             {!isEditing ? (
               <Button onClick={handleEdit} className="flex items-center gap-2">
-                <pencil className="h-4 w-4" />
+                <Pencil className="h-4 w-4" />
                 Edit
               </Button>
             ) : (
@@ -129,7 +129,7 @@ const RoleDetails = () => {
                   Restore
                 </Button>
                 <Button onClick={handleSave} className="flex items-center gap-2">
-                  <save className="h-4 w-4" />
+                  <Save className="h-4 w-4" />
                   Save
                 </Button>
               </>

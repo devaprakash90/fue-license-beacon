@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
@@ -16,7 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { filter } from "lucide-react";
+import { Filter } from "lucide-react";
 
 const FueCalculation = () => {
   const [searchTerm, setSearchTerm] = useState("");
