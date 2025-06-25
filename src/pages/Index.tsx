@@ -2,11 +2,11 @@
 import React from "react";
 import Layout from "@/components/Layout";
 import FeatureCard from "@/components/FeatureCard";
-import { Upload, FileText, Database, UserCog, User, BarChart, ListFilter, Calculator } from "lucide-react";
+import { Upload, FileText, Database, UserCog, User, BarChart, ListFilter, Calculator, Play } from "lucide-react";
 
 const Index = () => {
   return (
-    <Layout title="Welcome to FUE License Optimizer" showBackButton={false}>
+    <Layout title="Welcome to FUE Optimizer Pro" showBackButton={false}>
       <div className="space-y-8">
         {/* Master Data Section */}
         <section>
@@ -52,12 +52,25 @@ const Index = () => {
               link="/user-optimization"
               icon={<User size={24} />}
             />
+          </div>
+        </section>
 
+        {/* Simulation Section */}
+        <section>
+          <h2 className="section-title">Simulation</h2>
+          <div className="card-grid">
             <FeatureCard 
-              title="Simulation Results" 
-              description="View simulation results and impact analysis"
-              link="/simulation-results"
+              title="FUE Calculation" 
+              description="View FUE calculation and role analysis"
+              link="/fue-calculation"
               icon={<Calculator size={24} />}
+            />
+            
+            <FeatureCard 
+              title="Simulation Run" 
+              description="Run simulations to calculate FUE requirements"
+              link="/simulation-run"
+              icon={<Play size={24} />}
             />
           </div>
         </section>

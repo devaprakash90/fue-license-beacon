@@ -20,7 +20,7 @@ const Layout: React.FC<LayoutProps> = ({ children, title, showBackButton = true 
         <div className="page-container">
           <div className="flex items-center justify-between py-4">
             <Link to="/" className="flex items-center space-x-2 text-xl font-bold">
-              <span>FUE License Optimizer</span>
+              <span>FUE Optimizer Pro</span>
             </Link>
           </div>
         </div>
@@ -41,7 +41,7 @@ const Layout: React.FC<LayoutProps> = ({ children, title, showBackButton = true 
       <footer className="bg-gray-100 border-t border-gray-200">
         <div className="page-container py-4">
           <p className="text-center text-gray-600 text-sm">
-            &copy; {new Date().getFullYear()} FUE License Optimizer
+            &copy; {new Date().getFullYear()} FUE Optimizer Pro
           </p>
         </div>
       </footer>
