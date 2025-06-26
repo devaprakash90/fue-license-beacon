@@ -13,18 +13,21 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Save, RotateCcw } from "lucide-react";
+import { ArrowLeft, Save, RotateCcw, Pencil, Plus } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
 
 const CreateSimulation = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [licenseFilter, setLicenseFilter] = useState("all");
   const [selectedRole, setSelectedRole] = useState<any>(null);
   const [editedObjects, setEditedObjects] = useState<any[]>([]);
   const [hasChanges, setHasChanges] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
-  // All roles data
+  // All roles data with more mock data
   const roles = [
     {
       id: "Z:SAP_MM_IM_GOODS_MOVEMENTS",
@@ -152,6 +155,11 @@ const CreateSimulation = () => {
   const handleRoleSelect = (role: any) => {
     setSelectedRole(role);
     setEditedObjects([...role.objects]);
+    setIsEditing(false);
+  };
+
+  const handleEditClick = () => {
+    setIsEditing(true);
   };
 
   const updateObjectAction = (objectId: number, action: string) => {
@@ -172,33 +180,54 @@ const CreateSimulation = () => {
     setHasChanges(true);
   };
 
+  const handleAddObject = () => {
+    const newObject = {
+      id: Date.now(),
+      object: "",
+      classification: "",
+      fieldName: "",
+      valueLow: "",
+      valueHigh: "",
+      action: "Add",
+      newValue: ""
+    };
+    setEditedObjects(prev => [...prev, newObject]);
+    setHasChanges(true);
+  };
+
   const handleSave = () => {
     console.log("Saving changes for role:", selectedRole?.id, "Objects:", editedObjects);
-    // Here you would update the role's objects with the changes
+    setIsEditing(false);
+    toast({
+      title: "Changes Saved",
+      description: "Role changes have been saved successfully.",
+    });
   };
 
   const handleReset = () => {
     if (selectedRole) {
       setEditedObjects([...selectedRole.objects]);
       setHasChanges(false);
+      setIsEditing(false);
     }
   };
 
+  const generateRequestNumber = () => {
+    return `SIM${String(Date.now()).slice(-6)}`;
+  };
+
   const handleRunSimulation = () => {
-    // Create a new simulation entry and navigate back
-    const newSimulation = {
-      id: Date.now(),
-      name: `Simulation Run ${Date.now()}`,
-      date: new Date().toISOString().split('T')[0],
-      time: new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }),
-      simulationFue: Math.floor(Math.random() * 50) + 250,
-      actualFue: 306,
-      savings: Math.floor(Math.random() * 40) - 10,
-      status: "Running"
-    };
+    const requestNumber = generateRequestNumber();
     
-    console.log("Creating new simulation:", newSimulation);
-    navigate("/simulation-run");
+    toast({
+      title: "Simulation Request Submitted",
+      description: `Request for Simulation Run has been submitted. Request Number: ${requestNumber}`,
+    });
+    
+    // Navigate back to simulation run page
+    setTimeout(() => {
+      navigate("/simulation-run");
+    }, 2000);
   };
 
   return (
@@ -243,10 +272,20 @@ const CreateSimulation = () => {
           </CardContent>
         </Card>
 
-        {/* Second Part: Role Summary Table */}
+        {/* Second Part: Role Summary Table with Run Simulation Button */}
         <Card>
           <CardHeader>
-            <CardTitle>Role Summary</CardTitle>
+            <div className="flex justify-between items-center">
+              <CardTitle>Role Summary</CardTitle>
+              {hasChanges && (
+                <Button 
+                  onClick={handleRunSimulation}
+                  className="bg-orange-600 hover:bg-orange-700 text-white"
+                >
+                  Run Simulation
+                </Button>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
             <div className="overflow-y-auto max-h-96">
@@ -294,18 +333,35 @@ const CreateSimulation = () => {
                   <p className="text-sm text-gray-600 mt-1">Description: {selectedRole.description}</p>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" onClick={handleReset}>
-                    <RotateCcw className="h-4 w-4 mr-2" />
-                    Reset
-                  </Button>
-                  <Button onClick={handleSave}>
-                    <Save className="h-4 w-4 mr-2" />
-                    Save
-                  </Button>
+                  {!isEditing ? (
+                    <Button onClick={handleEditClick} variant="outline">
+                      <Pencil className="h-4 w-4 mr-2" />
+                      Edit
+                    </Button>
+                  ) : (
+                    <>
+                      <Button variant="outline" onClick={handleReset}>
+                        <RotateCcw className="h-4 w-4 mr-2" />
+                        Reset
+                      </Button>
+                      <Button onClick={handleSave}>
+                        <Save className="h-4 w-4 mr-2" />
+                        Save
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             </CardHeader>
             <CardContent>
+              {isEditing && (
+                <div className="mb-4">
+                  <Button onClick={handleAddObject} variant="outline" size="sm">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Object
+                  </Button>
+                </div>
+              )}
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -315,52 +371,104 @@ const CreateSimulation = () => {
                       <TableHead>Field Name</TableHead>
                       <TableHead>Value Low</TableHead>
                       <TableHead>Value High</TableHead>
-                      <TableHead>Action</TableHead>
-                      <TableHead>New Value</TableHead>
+                      {isEditing && <TableHead>Action</TableHead>}
+                      {isEditing && <TableHead>New Value</TableHead>}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {editedObjects.map((obj) => (
                       <TableRow key={obj.id}>
-                        <TableCell className="font-medium">{obj.object}</TableCell>
-                        <TableCell>{obj.classification}</TableCell>
-                        <TableCell>{obj.fieldName}</TableCell>
-                        <TableCell>{obj.valueLow}</TableCell>
-                        <TableCell>{obj.valueHigh}</TableCell>
                         <TableCell>
-                          <Select 
-                            value={obj.action || ""} 
-                            onValueChange={(value) => updateObjectAction(obj.id, value)}
-                          >
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select action" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="Add">Add</SelectItem>
-                              <SelectItem value="Change">Change</SelectItem>
-                              <SelectItem value="Remove">Remove</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </TableCell>
-                        <TableCell>
-                          {obj.action && obj.action !== "Remove" && (
-                            <Select 
-                              value={obj.newValue || ""} 
-                              onValueChange={(value) => updateObjectNewValue(obj.id, value)}
-                            >
-                              <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select new value" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {licenseOptions.map((option) => (
-                                  <SelectItem key={option} value={option}>
-                                    {option}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                          {isEditing && obj.action === "Add" ? (
+                            <Input 
+                              value={obj.object} 
+                              onChange={(e) => setEditedObjects(prev => 
+                                prev.map(o => o.id === obj.id ? {...o, object: e.target.value} : o)
+                              )}
+                              placeholder="Enter object"
+                            />
+                          ) : (
+                            <span className="font-medium">{obj.object}</span>
                           )}
                         </TableCell>
+                        <TableCell>{obj.classification}</TableCell>
+                        <TableCell>
+                          {isEditing && obj.action === "Add" ? (
+                            <Input 
+                              value={obj.fieldName} 
+                              onChange={(e) => setEditedObjects(prev => 
+                                prev.map(o => o.id === obj.id ? {...o, fieldName: e.target.value} : o)
+                              )}
+                              placeholder="Enter field name"
+                            />
+                          ) : (
+                            obj.fieldName
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {isEditing && obj.action === "Add" ? (
+                            <Input 
+                              value={obj.valueLow} 
+                              onChange={(e) => setEditedObjects(prev => 
+                                prev.map(o => o.id === obj.id ? {...o, valueLow: e.target.value} : o)
+                              )}
+                              placeholder="Enter value low"
+                            />
+                          ) : (
+                            obj.valueLow
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {isEditing && obj.action === "Add" ? (
+                            <Input 
+                              value={obj.valueHigh} 
+                              onChange={(e) => setEditedObjects(prev => 
+                                prev.map(o => o.id === obj.id ? {...o, valueHigh: e.target.value} : o)
+                              )}
+                              placeholder="Enter value high"
+                            />
+                          ) : (
+                            obj.valueHigh
+                          )}
+                        </TableCell>
+                        {isEditing && (
+                          <TableCell>
+                            <Select 
+                              value={obj.action || ""} 
+                              onValueChange={(value) => updateObjectAction(obj.id, value)}
+                            >
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select action" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Add">Add</SelectItem>
+                                <SelectItem value="Change">Change</SelectItem>
+                                <SelectItem value="Remove">Remove</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </TableCell>
+                        )}
+                        {isEditing && (
+                          <TableCell>
+                            {obj.action && obj.action !== "Remove" && (
+                              <Select 
+                                value={obj.newValue || ""} 
+                                onValueChange={(value) => updateObjectNewValue(obj.id, value)}
+                              >
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="Select new value" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {licenseOptions.map((option) => (
+                                    <SelectItem key={option} value={option}>
+                                      {option}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            )}
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))}
                   </TableBody>
@@ -368,19 +476,6 @@ const CreateSimulation = () => {
               </div>
             </CardContent>
           </Card>
-        )}
-
-        {/* Run Simulation Button */}
-        {hasChanges && (
-          <div className="flex justify-center pt-4">
-            <Button 
-              onClick={handleRunSimulation}
-              className="bg-red-600 hover:bg-red-700 text-white px-8 py-2"
-              size="lg"
-            >
-              Run Simulation
-            </Button>
-          </div>
         )}
       </div>
     </Layout>

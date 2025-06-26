@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Plus, Calendar, TrendingUp, TrendingDown } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -41,6 +40,28 @@ const SimulationRun = () => {
       savings: -4,
       status: "Completed",
       description: "Workflow Development tools analysis"
+    },
+    {
+      id: 4,
+      name: "Simulation Run 4",
+      date: "2024-01-05",
+      time: "11:20",
+      simulationFue: 275,
+      actualFue: 306,
+      savings: 31,
+      status: "Completed",
+      description: "Financial Accounting optimization"
+    },
+    {
+      id: 5,
+      name: "Simulation Run 5",
+      date: "2024-01-03",
+      time: "15:45",
+      simulationFue: 290,
+      actualFue: 306,
+      savings: 16,
+      status: "Completed",
+      description: "Sales & Distribution analysis"
     }
   ]);
 
@@ -76,9 +97,6 @@ const SimulationRun = () => {
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg">{simulation.name}</CardTitle>
-                  <Badge className={getStatusColor(simulation.status)}>
-                    {simulation.status}
-                  </Badge>
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <Calendar className="h-4 w-4 mr-1" />

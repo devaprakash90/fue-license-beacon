@@ -16,12 +16,22 @@ const Layout: React.FC<LayoutProps> = ({ children, title, showBackButton = true 
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-belize-300 text-white shadow-md">
+      <header className="bg-gray-800 text-white shadow-md">
         <div className="page-container">
           <div className="flex items-center justify-between py-4">
-            <Link to="/" className="flex items-center space-x-2 text-xl font-bold">
-              <span>FUE Optimizer Pro</span>
-            </Link>
+            <div className="flex items-center">
+              <img 
+                src="/lovable-uploads/9ed8c19c-a62f-4c73-b425-18681c6c55e5.png" 
+                alt="Tarento Logo" 
+                className="h-8 w-auto mr-3"
+              />
+            </div>
+            <div className="flex-1 text-center">
+              <Link to="/" className="text-xl font-bold">
+                FUE Optimizer Pro
+              </Link>
+            </div>
+            <div className="w-8"></div>
           </div>
         </div>
       </header>

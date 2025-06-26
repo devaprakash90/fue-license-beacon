@@ -113,80 +113,70 @@ const RoleOptimization = () => {
     <Layout title="Role Level License Optimization">
       <div className="space-y-6">
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-xl flex justify-between items-center">
-              <span>Optimization Filters</span>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setIsFilterOpen(!isFilterOpen)}
-              >
-                {isFilterOpen ? 'Hide' : 'Show'}
-              </Button>
-            </CardTitle>
-          </CardHeader>
-          <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-            <CollapsibleContent>
-              <CardContent className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-3">
-                  <div className="space-y-2">
-                    <label htmlFor="roleIds" className="text-sm font-medium">
-                      Role ID(s)
-                    </label>
-                    <Input
-                      id="roleIds"
-                      placeholder="Enter one or more role IDs, comma separated"
-                      value={roleIds}
-                      onChange={(e) => setRoleIds(e.target.value)}
-                    />
-                    <p className="text-xs text-gray-500">
-                      Leave blank to analyze all roles
-                    </p>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">
-                      License Type(s)
-                    </label>
-                    <MultiSelect
-                      options={licenseOptions}
-                      selectedValues={selectedLicenses}
-                      onSelectionChange={setSelectedLicenses}
-                      placeholder="Select license types"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">
-                      Ratio
-                    </label>
-                    <MultiSelect
-                      options={ratioOptionsList}
-                      selectedValues={selectedRatios}
-                      onSelectionChange={setSelectedRatios}
-                      placeholder="Select ratios"
-                    />
-                  </div>
+          <CardContent className="pt-6">
+            <div className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="space-y-2">
+                  <label htmlFor="roleIds" className="text-sm font-medium">
+                    Role ID(s)
+                  </label>
+                  <Input
+                    id="roleIds"
+                    placeholder="Enter one or more role IDs, comma separated"
+                    value={roleIds}
+                    onChange={(e) => setRoleIds(e.target.value)}
+                  />
+                  <p className="text-xs text-gray-500">
+                    Leave blank to analyze all roles
+                  </p>
                 </div>
                 
-                <div className="flex items-center justify-end space-x-2 pt-4">
-                  <Button variant="outline" onClick={handleClear}>
-                    Clear
-                  </Button>
-                  <Button onClick={handleAnalyze} disabled={isLoading}>
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Analyzing...
-                      </>
-                    ) : (
-                      "Analyze"
-                    )}
-                  </Button>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">
+                    License Type(s)
+                  </label>
+                  <MultiSelect
+                    options={licenseOptions}
+                    selectedValues={selectedLicenses}
+                    onSelectionChange={setSelectedLicenses}
+                    placeholder="Select license types"
+                  />
                 </div>
-              </CardContent>
-            </CollapsibleContent>
-          </Collapsible>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">
+                    Ratio
+                  </label>
+                  <MultiSelect
+                    options={ratioOptionsList}
+                    selectedValues={selectedRatios}
+                    onSelectionChange={setSelectedRatios}
+                    placeholder="Select ratios"
+                  />
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-end space-x-2 pt-4">
+                <Button variant="outline" onClick={handleClear}>
+                  Clear
+                </Button>
+                <Button 
+                  onClick={handleAnalyze} 
+                  disabled={isLoading}
+                  className="bg-blue-600 hover:bg-blue-800 text-white"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Analyzing...
+                    </>
+                  ) : (
+                    "Analyze"
+                  )}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
         </Card>
         
         <div>

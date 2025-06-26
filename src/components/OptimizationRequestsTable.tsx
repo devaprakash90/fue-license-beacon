@@ -36,6 +36,10 @@ const OptimizationRequestsTable: React.FC<OptimizationRequestsTableProps> = ({
     }
   };
 
+  const formatRequestId = (id: string, index: number) => {
+    return `REQ${String(index + 1).padStart(6, '0')}`;
+  };
+
   return (
     <div className="rounded-md border">
       <Table>
@@ -55,9 +59,9 @@ const OptimizationRequestsTable: React.FC<OptimizationRequestsTableProps> = ({
               </TableCell>
             </TableRow>
           ) : (
-            requests.map((request) => (
+            requests.map((request, index) => (
               <TableRow key={request.id}>
-                <TableCell className="font-medium">{request.id.slice(0, 8)}</TableCell>
+                <TableCell className="font-medium">{formatRequestId(request.id, index)}</TableCell>
                 <TableCell>
                   {format(new Date(request.created_at), "yyyy-MM-dd HH:mm:ss")}
                 </TableCell>

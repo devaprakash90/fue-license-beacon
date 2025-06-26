@@ -15,7 +15,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 
 const FueCalculation = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -25,13 +24,13 @@ const FueCalculation = () => {
   const fueCalculation = {
     totalFue: 306,
     breakdown: [
-      { classification: "GA - Developer", users: 7, fue: 14 },
       { classification: "GB - Advanced Use", users: 194, fue: 194 },
       { classification: "GC - Core Use", users: 470, fue: 94 },
       { classification: "GD - Self-Service Use", users: 101, fue: 4 }
     ]
   };
 
+  // Generate 20 mock roles
   const roles = [
     {
       id: "Z:SAP_MM_IM_GOODS_MOVEMENTS",
@@ -72,6 +71,126 @@ const FueCalculation = () => {
       classification: "GB Advanced Use",
       gb: 2, gc: 3, gd: 156,
       assignedUsers: 336
+    },
+    {
+      id: "Z:SAP_FI_ACCOUNTING_CLERK",
+      profile: "Z:SAP_FI_ACCOUNTING_CLERK",
+      description: "SAP Financial Accounting Clerk",
+      classification: "GC Core Use",
+      gb: 0, gc: 1, gd: 45,
+      assignedUsers: 89
+    },
+    {
+      id: "SAP_HR_EMPLOYEE_ESS",
+      profile: "SAP_HR_EMPLOYEE_ESS",
+      description: "SAP HR Employee Self Service",
+      classification: "GD Self-Service Use",
+      gb: 0, gc: 0, gd: 1,
+      assignedUsers: 1250
+    },
+    {
+      id: "Z:SAP_SD_SALES_REP",
+      profile: "Z:SAP_SD_SALES_REP",
+      description: "SAP Sales & Distribution Sales Representative",
+      classification: "GC Core Use",
+      gb: 0, gc: 1, gd: 23,
+      assignedUsers: 156
+    },
+    {
+      id: "SAP_PP_PRODUCTION_PLANNER",
+      profile: "SAP_PP_PRODUCTION_PLANNER",
+      description: "SAP Production Planning Planner",
+      classification: "GB Advanced Use",
+      gb: 1, gc: 2, gd: 12,
+      assignedUsers: 45
+    },
+    {
+      id: "Z:SAP_QM_QUALITY_INSPECTOR",
+      profile: "Z:SAP_QM_QUALITY_INSPECTOR",
+      description: "SAP Quality Management Inspector",
+      classification: "GC Core Use",
+      gb: 0, gc: 1, gd: 8,
+      assignedUsers: 67
+    },
+    {
+      id: "SAP_WM_WAREHOUSE_WORKER",
+      profile: "SAP_WM_WAREHOUSE_WORKER",
+      description: "SAP Warehouse Management Worker",
+      classification: "GD Self-Service Use",
+      gb: 0, gc: 0, gd: 1,
+      assignedUsers: 234
+    },
+    {
+      id: "Z:SAP_CO_CONTROLLER",
+      profile: "Z:SAP_CO_CONTROLLER",
+      description: "SAP Controlling Controller",
+      classification: "GB Advanced Use",
+      gb: 1, gc: 1, gd: 15,
+      assignedUsers: 78
+    },
+    {
+      id: "SAP_PM_MAINTENANCE_TECH",
+      profile: "SAP_PM_MAINTENANCE_TECH",
+      description: "SAP Plant Maintenance Technician",
+      classification: "GC Core Use",
+      gb: 0, gc: 1, gd: 18,
+      assignedUsers: 123
+    },
+    {
+      id: "Z:SAP_PS_PROJECT_MANAGER",
+      profile: "Z:SAP_PS_PROJECT_MANAGER",
+      description: "SAP Project System Manager",
+      classification: "GB Advanced Use",
+      gb: 1, gc: 2, gd: 25,
+      assignedUsers: 89
+    },
+    {
+      id: "SAP_IS_INDUSTRY_SPECIFIC",
+      profile: "SAP_IS_INDUSTRY_SPECIFIC",
+      description: "SAP Industry Specific Solutions",
+      classification: "GB Advanced Use",
+      gb: 1, gc: 1, gd: 10,
+      assignedUsers: 56
+    },
+    {
+      id: "Z:SAP_BASIS_ADMIN",
+      profile: "Z:SAP_BASIS_ADMIN",
+      description: "SAP Basis Administration",
+      classification: "GB Advanced Use",
+      gb: 1, gc: 0, gd: 5,
+      assignedUsers: 12
+    },
+    {
+      id: "SAP_SECURITY_ADMIN",
+      profile: "SAP_SECURITY_ADMIN",
+      description: "SAP Security Administration",
+      classification: "GB Advanced Use",
+      gb: 1, gc: 0, gd: 3,
+      assignedUsers: 8
+    },
+    {
+      id: "Z:SAP_BI_ANALYST",
+      profile: "Z:SAP_BI_ANALYST",
+      description: "SAP Business Intelligence Analyst",
+      classification: "GC Core Use",
+      gb: 0, gc: 1, gd: 20,
+      assignedUsers: 145
+    },
+    {
+      id: "SAP_CRM_SALES_MANAGER",
+      profile: "SAP_CRM_SALES_MANAGER",
+      description: "SAP Customer Relationship Management Sales Manager",
+      classification: "GB Advanced Use",
+      gb: 1, gc: 1, gd: 15,
+      assignedUsers: 67
+    },
+    {
+      id: "Z:SAP_PORTAL_USER",
+      profile: "Z:SAP_PORTAL_USER",
+      description: "SAP Enterprise Portal User",
+      classification: "GD Self-Service Use",
+      gb: 0, gc: 0, gd: 1,
+      assignedUsers: 890
     }
   ];
 
@@ -87,6 +206,9 @@ const FueCalculation = () => {
     return matchesSearch && matchesLicense;
   });
 
+  // Show only 10 entries
+  const displayedRoles = filteredRoles.slice(0, 10);
+
   return (
     <Layout title="FUE Calculation">
       <div className="space-y-6">
@@ -96,14 +218,8 @@ const FueCalculation = () => {
             <CardTitle className="text-xl">Full Use Equivalent Summary</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-              <div className="lg:col-span-1">
-                <div className="border p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold">{fueCalculation.totalFue}</div>
-                  <div className="text-sm text-gray-600">Full Use Equivalent</div>
-                </div>
-              </div>
-              <div className="lg:col-span-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
                 <div className="space-y-2">
                   <div className="grid grid-cols-3 gap-4 text-sm font-medium">
                     <div>Authorization Classification</div>
@@ -117,6 +233,12 @@ const FueCalculation = () => {
                       <div>{item.fue}</div>
                     </div>
                   ))}
+                </div>
+              </div>
+              <div className="flex justify-end">
+                <div className="border p-4 rounded-lg text-center">
+                  <div className="text-2xl font-bold">{fueCalculation.totalFue}</div>
+                  <div className="text-sm text-gray-600">Full Use Equivalent</div>
                 </div>
               </div>
             </div>
@@ -160,10 +282,10 @@ const FueCalculation = () => {
         {/* Roles Table */}
         <Card>
           <CardHeader>
-            <CardTitle>Role Summary</CardTitle>
+            <CardTitle>Role/Profile Summary</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto max-h-96 overflow-y-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -176,7 +298,7 @@ const FueCalculation = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredRoles.map((role) => (
+                  {displayedRoles.map((role) => (
                     <TableRow key={role.id} className="cursor-pointer hover:bg-gray-50">
                       <TableCell>
                         <Link 
@@ -186,11 +308,7 @@ const FueCalculation = () => {
                           {role.id}
                         </Link>
                       </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">
-                          {role.classification}
-                        </Badge>
-                      </TableCell>
+                      <TableCell>{role.classification}</TableCell>
                       <TableCell>{role.gb}</TableCell>
                       <TableCell>{role.gc}</TableCell>
                       <TableCell>{role.gd}</TableCell>
