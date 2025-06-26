@@ -6,7 +6,7 @@ import { Upload, FileText, Database, UserCog, User, BarChart, ListFilter, Calcul
 
 const Index = () => {
   return (
-    <Layout title="Welcome to FUE Optimizer Pro" showBackButton={false}>
+    <Layout title="" showBackButton={false}>
       <div className="space-y-8">
         {/* Master Data Section */}
         <section>

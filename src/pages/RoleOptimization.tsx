@@ -11,8 +11,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { OptimizationRequest, LicenseType, RatioOption } from "@/types/optimization";
 import { 
-  getLicenseTypes, 
-  getRatioOptions, 
   getOptimizationRequests, 
   createOptimizationRequest,
   createMockResults
@@ -23,21 +21,16 @@ const RoleOptimization = () => {
   const { toast } = useToast();
   const [roleIds, setRoleIds] = useState<string>("");
   const [selectedLicenses, setSelectedLicenses] = useState<string[]>([]);
-  const [selectedRatios, setSelectedRatios] = useState<string[]>([]);
+  const [ratioValue, setRatioValue] = useState<string>("");
   const [isFilterOpen, setIsFilterOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   
-  // Fetch license types
-  const { data: licenseTypes = [] } = useQuery({
-    queryKey: ['licenseTypes'],
-    queryFn: getLicenseTypes
-  });
-  
-  // Fetch ratio options
-  const { data: ratioOptions = [] } = useQuery({
-    queryKey: ['ratioOptions'],
-    queryFn: getRatioOptions
-  });
+  // Fixed license types as per requirements
+  const licenseOptions: Option[] = [
+    { value: "gb_advanced", label: "GB Advanced Use" },
+    { value: "gc_core", label: "GC Core Use" },
+    { value: "gd_self_service", label: "GD Self-Service Use" }
+  ];
   
   // Fetch optimization requests
   const { 
@@ -47,18 +40,6 @@ const RoleOptimization = () => {
     queryKey: ['roleOptimizationRequests'],
     queryFn: () => getOptimizationRequests('role')
   });
-  
-  // Create license type options
-  const licenseOptions: Option[] = licenseTypes.map((license) => ({
-    value: license.id,
-    label: license.name
-  }));
-  
-  // Create ratio options
-  const ratioOptionsList: Option[] = ratioOptions.map((ratio) => ({
-    value: ratio.id,
-    label: ratio.value
-  }));
   
   // Create optimization request mutation
   const createRequestMutation = useMutation({
@@ -97,7 +78,7 @@ const RoleOptimization = () => {
     const filters = {
       roleIds: roleIdArray.length > 0 ? roleIdArray : null,
       licenses: selectedLicenses.length > 0 ? selectedLicenses : null,
-      ratios: selectedRatios.length > 0 ? selectedRatios : null,
+      ratio: ratioValue.trim() || null,
     };
     
     createRequestMutation.mutate(filters);
@@ -106,7 +87,7 @@ const RoleOptimization = () => {
   const handleClear = () => {
     setRoleIds("");
     setSelectedLicenses([]);
-    setSelectedRatios([]);
+    setRatioValue("");
   };
   
   return (
@@ -147,11 +128,11 @@ const RoleOptimization = () => {
                   <label className="text-sm font-medium">
                     Ratio
                   </label>
-                  <MultiSelect
-                    options={ratioOptionsList}
-                    selectedValues={selectedRatios}
-                    onSelectionChange={setSelectedRatios}
-                    placeholder="Select ratios"
+                  <Input
+                    placeholder="Enter numeric ratio value"
+                    value={ratioValue}
+                    onChange={(e) => setRatioValue(e.target.value)}
+                    type="number"
                   />
                 </div>
               </div>
@@ -163,7 +144,7 @@ const RoleOptimization = () => {
                 <Button 
                   onClick={handleAnalyze} 
                   disabled={isLoading}
-                  className="bg-blue-600 hover:bg-blue-800 text-white"
+                  className="bg-blue-600 hover:bg-blue-900 text-white"
                 >
                   {isLoading ? (
                     <>

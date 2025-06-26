@@ -16,8 +16,7 @@ const SimulationRun = () => {
       simulationFue: 280,
       actualFue: 306,
       savings: 26,
-      status: "Completed",
-      description: "SAP Materials Management optimization analysis"
+      status: "Completed"
     },
     {
       id: 2,
@@ -27,8 +26,7 @@ const SimulationRun = () => {
       simulationFue: 295,
       actualFue: 306,
       savings: 11,
-      status: "Completed",
-      description: "Teams Administration roles optimization"
+      status: "Completed"
     },
     {
       id: 3,
@@ -38,8 +36,7 @@ const SimulationRun = () => {
       simulationFue: 310,
       actualFue: 306,
       savings: -4,
-      status: "Completed",
-      description: "Workflow Development tools analysis"
+      status: "Completed"
     },
     {
       id: 4,
@@ -49,8 +46,7 @@ const SimulationRun = () => {
       simulationFue: 275,
       actualFue: 306,
       savings: 31,
-      status: "Completed",
-      description: "Financial Accounting optimization"
+      status: "Completed"
     },
     {
       id: 5,
@@ -60,8 +56,7 @@ const SimulationRun = () => {
       simulationFue: 290,
       actualFue: 306,
       savings: 16,
-      status: "Completed",
-      description: "Sales & Distribution analysis"
+      status: "Completed"
     }
   ]);
 
@@ -102,7 +97,6 @@ const SimulationRun = () => {
                   <Calendar className="h-4 w-4 mr-1" />
                   {simulation.date} at {simulation.time}
                 </div>
-                <p className="text-sm text-gray-600 mt-2">{simulation.description}</p>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">

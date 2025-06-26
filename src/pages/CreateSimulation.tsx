@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
@@ -26,8 +25,9 @@ const CreateSimulation = () => {
   const [editedObjects, setEditedObjects] = useState<any[]>([]);
   const [hasChanges, setHasChanges] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [savedChanges, setSavedChanges] = useState(false);
 
-  // All roles data with more mock data
+  // Mock data with 20 roles
   const roles = [
     {
       id: "Z:SAP_MM_IM_GOODS_MOVEMENTS",
@@ -133,6 +133,272 @@ const CreateSimulation = () => {
           newValue: ""
         }
       ]
+    },
+    {
+      id: "SAP_FI_GL_MASTER_RECORD_MAINTAIN",
+      description: "Financial Accounting General Ledger Master Record Maintenance",
+      classification: "GC Core Use",
+      gb: 0, gc: 1, gd: 5,
+      assignedUsers: 89,
+      objects: [
+        {
+          id: 7,
+          object: "F_SKA1_MAI",
+          classification: "GC Core Use",
+          fieldName: "ACTVT",
+          valueLow: "02",
+          valueHigh: "",
+          action: null,
+          newValue: ""
+        }
+      ]
+    },
+    {
+      id: "SAP_SD_SALES_ORDER_PROCESSING",
+      description: "Sales and Distribution Sales Order Processing",
+      classification: "GB Advanced Use",
+      gb: 1, gc: 1, gd: 45,
+      assignedUsers: 234,
+      objects: [
+        {
+          id: 8,
+          object: "V_VBAK_VKO",
+          classification: "GB Advanced Use",
+          fieldName: "ACTVT",
+          valueLow: "01",
+          valueHigh: "",
+          action: null,
+          newValue: ""
+        }
+      ]
+    },
+    {
+      id: "SAP_PP_PRODUCTION_PLANNING",
+      description: "Production Planning and Control",
+      classification: "GB Advanced Use",
+      gb: 2, gc: 1, gd: 23,
+      assignedUsers: 145,
+      objects: [
+        {
+          id: 9,
+          object: "P_PKHD_LOW",
+          classification: "GB Advanced Use",
+          fieldName: "ACTVT",
+          valueLow: "01",
+          valueHigh: "",
+          action: null,
+          newValue: ""
+        }
+      ]
+    },
+    {
+      id: "SAP_HR_PERSONNEL_ADMINISTRATION",
+      description: "Human Resources Personnel Administration",
+      classification: "GC Core Use",
+      gb: 0, gc: 2, gd: 12,
+      assignedUsers: 78,
+      objects: [
+        {
+          id: 10,
+          object: "P_PERNR_REP",
+          classification: "GC Core Use",
+          fieldName: "ACTVT",
+          valueLow: "03",
+          valueHigh: "",
+          action: null,
+          newValue: ""
+        }
+      ]
+    },
+    {
+      id: "SAP_CO_COST_CENTER_ACCOUNTING",
+      description: "Controlling Cost Center Accounting",
+      classification: "GC Core Use",
+      gb: 0, gc: 1, gd: 8,
+      assignedUsers: 67,
+      objects: [
+        {
+          id: 11,
+          object: "K_CSKS_MNT",
+          classification: "GC Core Use",
+          fieldName: "ACTVT",
+          valueLow: "02",
+          valueHigh: "",
+          action: null,
+          newValue: ""
+        }
+      ]
+    },
+    {
+      id: "SAP_QM_QUALITY_MANAGEMENT",
+      description: "Quality Management System",
+      classification: "GB Advanced Use",
+      gb: 1, gc: 0, gd: 15,
+      assignedUsers: 56,
+      objects: [
+        {
+          id: 12,
+          object: "Q_QALS_CHG",
+          classification: "GB Advanced Use",
+          fieldName: "ACTVT",
+          valueLow: "02",
+          valueHigh: "",
+          action: null,
+          newValue: ""
+        }
+      ]
+    },
+    {
+      id: "SAP_WM_WAREHOUSE_MANAGEMENT",
+      description: "Warehouse Management System",
+      classification: "GD Self-Service Use",
+      gb: 0, gc: 0, gd: 34,
+      assignedUsers: 123,
+      objects: [
+        {
+          id: 13,
+          object: "L_LAGP_REP",
+          classification: "GD Self-Service Use",
+          fieldName: "ACTVT",
+          valueLow: "03",
+          valueHigh: "",
+          action: null,
+          newValue: ""
+        }
+      ]
+    },
+    {
+      id: "SAP_PM_PLANT_MAINTENANCE",
+      description: "Plant Maintenance and Service Management",
+      classification: "GB Advanced Use",
+      gb: 1, gc: 1, gd: 19,
+      assignedUsers: 89,
+      objects: [
+        {
+          id: 14,
+          object: "I_EQUI_CHG",
+          classification: "GB Advanced Use",
+          fieldName: "ACTVT",
+          valueLow: "02",
+          valueHigh: "",
+          action: null,
+          newValue: ""
+        }
+      ]
+    },
+    {
+      id: "SAP_PS_PROJECT_SYSTEM",
+      description: "Project System Management",
+      classification: "GC Core Use",
+      gb: 0, gc: 1, gd: 7,
+      assignedUsers: 45,
+      objects: [
+        {
+          id: 15,
+          object: "K_PROJECT_REP",
+          classification: "GC Core Use",
+          fieldName: "ACTVT",
+          valueLow: "03",
+          valueHigh: "",
+          action: null,
+          newValue: ""
+        }
+      ]
+    },
+    {
+      id: "SAP_BC_BASIS_ADMINISTRATION",
+      description: "Basis System Administration",
+      classification: "GB Advanced Use",
+      gb: 3, gc: 0, gd: 2,
+      assignedUsers: 12,
+      objects: [
+        {
+          id: 16,
+          object: "S_TCODE",
+          classification: "GB Advanced Use",
+          fieldName: "TCD",
+          valueLow: "SM*",
+          valueHigh: "",
+          action: null,
+          newValue: ""
+        }
+      ]
+    },
+    {
+      id: "SAP_TR_TREASURY_MANAGEMENT",
+      description: "Treasury and Risk Management",
+      classification: "GC Core Use",
+      gb: 0, gc: 2, gd: 5,
+      assignedUsers: 34,
+      objects: [
+        {
+          id: 17,
+          object: "F_TR_TABLE",
+          classification: "GC Core Use",
+          fieldName: "ACTVT",
+          valueLow: "03",
+          valueHigh: "",
+          action: null,
+          newValue: ""
+        }
+      ]
+    },
+    {
+      id: "SAP_IS_INDUSTRY_SOLUTIONS",
+      description: "Industry-Specific Solutions",
+      classification: "GD Self-Service Use",
+      gb: 0, gc: 0, gd: 25,
+      assignedUsers: 87,
+      objects: [
+        {
+          id: 18,
+          object: "IS_OIL_REP",
+          classification: "GD Self-Service Use",
+          fieldName: "ACTVT",
+          valueLow: "03",
+          valueHigh: "",
+          action: null,
+          newValue: ""
+        }
+      ]
+    },
+    {
+      id: "SAP_LE_LOGISTICS_EXECUTION",
+      description: "Logistics Execution and Transportation",
+      classification: "GB Advanced Use",
+      gb: 1, gc: 0, gd: 18,
+      assignedUsers: 76,
+      objects: [
+        {
+          id: 19,
+          object: "V_LIKP_VST",
+          classification: "GB Advanced Use",
+          fieldName: "ACTVT",
+          valueLow: "01",
+          valueHigh: "",
+          action: null,
+          newValue: ""
+        }
+      ]
+    },
+    {
+      id: "SAP_CRM_CUSTOMER_RELATIONSHIP",
+      description: "Customer Relationship Management",
+      classification: "GC Core Use",
+      gb: 0, gc: 1, gd: 22,
+      assignedUsers: 98,
+      objects: [
+        {
+          id: 20,
+          object: "CRM_OPPORTUNITY",
+          classification: "GC Core Use",
+          fieldName: "ACTVT",
+          valueLow: "02",
+          valueHigh: "",
+          action: null,
+          newValue: ""
+        }
+      ]
     }
   ];
 
@@ -169,6 +435,7 @@ const CreateSimulation = () => {
       )
     );
     setHasChanges(true);
+    setSavedChanges(false);
   };
 
   const updateObjectNewValue = (objectId: number, newValue: string) => {
@@ -178,6 +445,17 @@ const CreateSimulation = () => {
       )
     );
     setHasChanges(true);
+    setSavedChanges(false);
+  };
+
+  const updateObjectField = (objectId: number, field: string, value: string) => {
+    setEditedObjects(prev => 
+      prev.map(obj => 
+        obj.id === objectId ? { ...obj, [field]: value } : obj
+      )
+    );
+    setHasChanges(true);
+    setSavedChanges(false);
   };
 
   const handleAddObject = () => {
@@ -193,11 +471,13 @@ const CreateSimulation = () => {
     };
     setEditedObjects(prev => [...prev, newObject]);
     setHasChanges(true);
+    setSavedChanges(false);
   };
 
   const handleSave = () => {
     console.log("Saving changes for role:", selectedRole?.id, "Objects:", editedObjects);
     setIsEditing(false);
+    setSavedChanges(true);
     toast({
       title: "Changes Saved",
       description: "Role changes have been saved successfully.",
@@ -209,6 +489,7 @@ const CreateSimulation = () => {
       setEditedObjects([...selectedRole.objects]);
       setHasChanges(false);
       setIsEditing(false);
+      setSavedChanges(false);
     }
   };
 
@@ -272,19 +553,18 @@ const CreateSimulation = () => {
           </CardContent>
         </Card>
 
-        {/* Second Part: Role Summary Table with Run Simulation Button */}
+        {/* Second Part: Role/Profile Summary Table with Run Simulation Button */}
         <Card>
           <CardHeader>
             <div className="flex justify-between items-center">
-              <CardTitle>Role Summary</CardTitle>
-              {hasChanges && (
-                <Button 
-                  onClick={handleRunSimulation}
-                  className="bg-orange-600 hover:bg-orange-700 text-white"
-                >
-                  Run Simulation
-                </Button>
-              )}
+              <CardTitle>Role/Profile Summary</CardTitle>
+              <Button 
+                onClick={handleRunSimulation}
+                disabled={!savedChanges}
+                className="bg-orange-600 hover:bg-orange-700 text-white disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                Run Simulation
+              </Button>
             </div>
           </CardHeader>
           <CardContent>
@@ -382,9 +662,7 @@ const CreateSimulation = () => {
                           {isEditing && obj.action === "Add" ? (
                             <Input 
                               value={obj.object} 
-                              onChange={(e) => setEditedObjects(prev => 
-                                prev.map(o => o.id === obj.id ? {...o, object: e.target.value} : o)
-                              )}
+                              onChange={(e) => updateObjectField(obj.id, 'object', e.target.value)}
                               placeholder="Enter object"
                             />
                           ) : (
@@ -396,9 +674,7 @@ const CreateSimulation = () => {
                           {isEditing && obj.action === "Add" ? (
                             <Input 
                               value={obj.fieldName} 
-                              onChange={(e) => setEditedObjects(prev => 
-                                prev.map(o => o.id === obj.id ? {...o, fieldName: e.target.value} : o)
-                              )}
+                              onChange={(e) => updateObjectField(obj.id, 'fieldName', e.target.value)}
                               placeholder="Enter field name"
                             />
                           ) : (
@@ -409,9 +685,7 @@ const CreateSimulation = () => {
                           {isEditing && obj.action === "Add" ? (
                             <Input 
                               value={obj.valueLow} 
-                              onChange={(e) => setEditedObjects(prev => 
-                                prev.map(o => o.id === obj.id ? {...o, valueLow: e.target.value} : o)
-                              )}
+                              onChange={(e) => updateObjectField(obj.id, 'valueLow', e.target.value)}
                               placeholder="Enter value low"
                             />
                           ) : (
@@ -422,9 +696,7 @@ const CreateSimulation = () => {
                           {isEditing && obj.action === "Add" ? (
                             <Input 
                               value={obj.valueHigh} 
-                              onChange={(e) => setEditedObjects(prev => 
-                                prev.map(o => o.id === obj.id ? {...o, valueHigh: e.target.value} : o)
-                              )}
+                              onChange={(e) => updateObjectField(obj.id, 'valueHigh', e.target.value)}
                               placeholder="Enter value high"
                             />
                           ) : (

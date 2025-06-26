@@ -138,14 +138,16 @@ const RoleOptimizationResults = () => {
                     <TableHead>Authorization Object</TableHead>
                     <TableHead>Field</TableHead>
                     <TableHead>Value</TableHead>
-                    <TableHead>License Reducible</TableHead>
-                    <TableHead>Insights & Recommendations</TableHead>
+                    <TableHead>License Can Be Reduced</TableHead>
+                    <TableHead>Insights</TableHead>
+                    <TableHead>Recommendations</TableHead>
+                    <TableHead>Explanations</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredResults.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={7} className="text-center py-6">
+                      <TableCell colSpan={9} className="text-center py-6">
                         No results found. Try adjusting your search criteria.
                       </TableCell>
                     </TableRow>
@@ -168,19 +170,9 @@ const RoleOptimizationResults = () => {
                             </span>
                           )}
                         </TableCell>
-                        <TableCell className="max-w-xs">
-                          {result.insights && (
-                            <div className="mb-1">
-                              <span className="font-medium">Insights:</span> {result.insights}
-                            </div>
-                          )}
-                          {result.recommendations && (
-                            <div>
-                              <span className="font-medium">Recommendations:</span>{" "}
-                              {result.recommendations}
-                            </div>
-                          )}
-                        </TableCell>
+                        <TableCell className="text-left">{result.insights || "-"}</TableCell>
+                        <TableCell className="text-left">{result.recommendations || "-"}</TableCell>
+                        <TableCell className="text-left">{result.explanations || "-"}</TableCell>
                       </TableRow>
                     ))
                   )}
