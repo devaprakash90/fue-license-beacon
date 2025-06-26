@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,9 +18,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 const CreateSimulation = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedObjects, setEditedObjects] = useState<any[]>([]);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [editedRoles, setEditedRoles] = useState<any[]>([]);
 
-  // Mock data for roles in simulation
+  // All roles data (similar to FUE Calculation)
   const roles = [
     {
       id: "Z:SAP_MM_IM_GOODS_MOVEMENTS",
@@ -50,10 +51,86 @@ const CreateSimulation = () => {
           newValue: ""
         }
       ]
+    },
+    {
+      id: "/SKYBFRHC_TEAMS_MAINTAIN_AD",
+      description: "Teams Maintenance Administration",
+      classification: "GB Advanced Use",
+      gb: 1, gc: 0, gd: 1,
+      assignedUsers: 108,
+      objects: [
+        {
+          id: 3,
+          object: "S_USER_GRP",
+          classification: "GB Advanced Use",
+          fieldName: "CLASS",
+          valueLow: "*",
+          valueHigh: "",
+          action: null,
+          newValue: ""
+        }
+      ]
+    },
+    {
+      id: "/SKYBFRIDD_CC_TEAMS_ADMIN_SST",
+      description: "Teams Administration Self-Service Tools",
+      classification: "GB Advanced Use", 
+      gb: 1, gc: 0, gd: 0,
+      assignedUsers: 105,
+      objects: [
+        {
+          id: 4,
+          object: "S_ADMIN",
+          classification: "GB Advanced Use",
+          fieldName: "ACTVT",
+          valueLow: "01",
+          valueHigh: "",
+          action: null,
+          newValue: ""
+        }
+      ]
+    },
+    {
+      id: "ZUCM_SAP_INTNW_BMT_WFM_DEVELOP",
+      description: "SAP Internal Network Business Management Tools - Workflow Development",
+      classification: "GB Advanced Use",
+      gb: 1, gc: 0, gd: 0,
+      assignedUsers: 3,
+      objects: [
+        {
+          id: 5,
+          object: "S_DEVELOP",
+          classification: "GB Advanced Use",
+          fieldName: "DEVCLASS",
+          valueLow: "Z*",
+          valueHigh: "",
+          action: null,
+          newValue: ""
+        }
+      ]
+    },
+    {
+      id: "SAP_AIO_PURCHASER-S",
+      description: "SAP All-in-One Purchaser Standard",
+      classification: "GB Advanced Use",
+      gb: 2, gc: 3, gd: 156,
+      assignedUsers: 336,
+      objects: [
+        {
+          id: 6,
+          object: "M_BANF_EKG",
+          classification: "GB Advanced Use",
+          fieldName: "ACTVT",
+          valueLow: "01",
+          valueHigh: "",
+          action: null,
+          newValue: ""
+        }
+      ]
     }
   ];
 
-  const [selectedRole, setSelectedRole] = useState<any>(null);
+  const [selectedRoles, setSelectedRoles] = useState<any[]>([]);
 
   const licenseOptions = [
     "01 (Create)/GC Core Use",
@@ -65,40 +142,57 @@ const CreateSimulation = () => {
 
   const handleEdit = () => {
     setIsEditing(true);
-    if (selectedRole) {
-      setEditedObjects([...selectedRole.objects]);
-    }
+    setEditedRoles([...roles]);
   };
 
   const handleSave = () => {
     setIsEditing(false);
-    // Update the role objects and enable run simulation button
-    console.log("Saving changes:", editedObjects);
+    setHasChanges(true);
+    console.log("Saving changes:", editedRoles);
   };
 
   const handleRestore = () => {
-    if (selectedRole) {
-      setEditedObjects([...selectedRole.objects]);
+    setEditedRoles([...roles]);
+  };
+
+  const handleRunSimulation = () => {
+    if (hasChanges) {
+      console.log("Running simulation with changes...");
+      // Here you would save the changes to database and run simulation
     }
   };
 
-  const updateObjectAction = (objectId: number, action: string) => {
-    setEditedObjects(prev => 
-      prev.map(obj => 
-        obj.id === objectId ? { ...obj, action, newValue: action === "Remove" ? "" : obj.newValue } : obj
+  const updateObjectAction = (roleId: string, objectId: number, action: string) => {
+    setEditedRoles(prev => 
+      prev.map(role => 
+        role.id === roleId 
+          ? {
+              ...role,
+              objects: role.objects.map((obj: any) => 
+                obj.id === objectId ? { ...obj, action, newValue: action === "Remove" ? "" : obj.newValue } : obj
+              )
+            }
+          : role
       )
     );
   };
 
-  const updateObjectNewValue = (objectId: number, newValue: string) => {
-    setEditedObjects(prev => 
-      prev.map(obj => 
-        obj.id === objectId ? { ...obj, newValue } : obj
+  const updateObjectNewValue = (roleId: string, objectId: number, newValue: string) => {
+    setEditedRoles(prev => 
+      prev.map(role => 
+        role.id === roleId 
+          ? {
+              ...role,
+              objects: role.objects.map((obj: any) => 
+                obj.id === objectId ? { ...obj, newValue } : obj
+              )
+            }
+          : role
       )
     );
   };
 
-  const currentObjects = isEditing ? editedObjects : (selectedRole?.objects || []);
+  const currentRoles = isEditing ? editedRoles : roles;
 
   return (
     <Layout title="Create Simulation">
@@ -107,12 +201,38 @@ const CreateSimulation = () => {
           <Link to="/simulation-run" className="flex items-center text-blue-600">
             <ArrowLeft className="mr-1 h-4 w-4" /> Back to Simulation Run
           </Link>
+          <div className="flex items-center gap-2">
+            {!isEditing ? (
+              <Button onClick={handleEdit} className="flex items-center gap-2">
+                <Pencil className="h-4 w-4" />
+                Edit Roles
+              </Button>
+            ) : (
+              <>
+                <Button variant="outline" onClick={handleRestore}>
+                  Restore
+                </Button>
+                <Button onClick={handleSave} className="flex items-center gap-2">
+                  <Save className="h-4 w-4" />
+                  Save Changes
+                </Button>
+              </>
+            )}
+            {hasChanges && (
+              <Button 
+                onClick={handleRunSimulation}
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                Run Simulation
+              </Button>
+            )}
+          </div>
         </div>
 
-        {/* Roles Selection */}
+        {/* Roles Table */}
         <Card>
           <CardHeader>
-            <CardTitle>Select Role to Modify</CardTitle>
+            <CardTitle>All Roles for Simulation</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
@@ -129,13 +249,9 @@ const CreateSimulation = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {roles.map((role) => (
-                    <TableRow 
-                      key={role.id} 
-                      className="cursor-pointer hover:bg-gray-50"
-                      onClick={() => setSelectedRole(role)}
-                    >
-                      <TableCell className="font-medium text-blue-600">
+                  {currentRoles.map((role) => (
+                    <TableRow key={role.id}>
+                      <TableCell className="font-medium">
                         {role.id}
                       </TableCell>
                       <TableCell>{role.description}</TableCell>
@@ -156,34 +272,12 @@ const CreateSimulation = () => {
           </CardContent>
         </Card>
 
-        {/* Role Details for Editing */}
-        {selectedRole && (
-          <Card>
+        {/* Authorization Objects for Each Role */}
+        {isEditing && currentRoles.map((role) => (
+          <Card key={role.id}>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>Role: {selectedRole.id}</CardTitle>
-                  <p className="text-sm text-gray-600">Description: {selectedRole.description}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  {!isEditing ? (
-                    <Button onClick={handleEdit} className="flex items-center gap-2">
-                      <Pencil className="h-4 w-4" />
-                      Edit
-                    </Button>
-                  ) : (
-                    <>
-                      <Button variant="outline" onClick={handleRestore}>
-                        Restore
-                      </Button>
-                      <Button onClick={handleSave} className="flex items-center gap-2">
-                        <Save className="h-4 w-4" />
-                        Save
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </div>
+              <CardTitle>Authorization Objects - {role.id}</CardTitle>
+              <p className="text-sm text-gray-600">Description: {role.description}</p>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -195,16 +289,12 @@ const CreateSimulation = () => {
                       <TableHead>Field Name</TableHead>
                       <TableHead>Value Low</TableHead>
                       <TableHead>Value High</TableHead>
-                      {isEditing && (
-                        <>
-                          <TableHead>Action</TableHead>
-                          <TableHead>New Value</TableHead>
-                        </>
-                      )}
+                      <TableHead>Action</TableHead>
+                      <TableHead>New Value</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {currentObjects.map((obj) => (
+                    {role.objects.map((obj: any) => (
                       <TableRow key={obj.id}>
                         <TableCell className="font-medium">{obj.object}</TableCell>
                         <TableCell>
@@ -215,44 +305,40 @@ const CreateSimulation = () => {
                         <TableCell>{obj.fieldName}</TableCell>
                         <TableCell>{obj.valueLow}</TableCell>
                         <TableCell>{obj.valueHigh}</TableCell>
-                        {isEditing && (
-                          <>
-                            <TableCell>
-                              <Select 
-                                value={obj.action || ""} 
-                                onValueChange={(value) => updateObjectAction(obj.id, value)}
-                              >
-                                <SelectTrigger className="w-full">
-                                  <SelectValue placeholder="Select action" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="Add">Add</SelectItem>
-                                  <SelectItem value="Change">Change</SelectItem>
-                                  <SelectItem value="Remove">Remove</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </TableCell>
-                            <TableCell>
-                              {obj.action && obj.action !== "Remove" && (
-                                <Select 
-                                  value={obj.newValue || ""} 
-                                  onValueChange={(value) => updateObjectNewValue(obj.id, value)}
-                                >
-                                  <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select new value" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {licenseOptions.map((option) => (
-                                      <SelectItem key={option} value={option}>
-                                        {option}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              )}
-                            </TableCell>
-                          </>
-                        )}
+                        <TableCell>
+                          <Select 
+                            value={obj.action || ""} 
+                            onValueChange={(value) => updateObjectAction(role.id, obj.id, value)}
+                          >
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select action" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Add">Add</SelectItem>
+                              <SelectItem value="Change">Change</SelectItem>
+                              <SelectItem value="Remove">Remove</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </TableCell>
+                        <TableCell>
+                          {obj.action && obj.action !== "Remove" && (
+                            <Select 
+                              value={obj.newValue || ""} 
+                              onValueChange={(value) => updateObjectNewValue(role.id, obj.id, value)}
+                            >
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select new value" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {licenseOptions.map((option) => (
+                                  <SelectItem key={option} value={option}>
+                                    {option}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -260,7 +346,7 @@ const CreateSimulation = () => {
               </div>
             </CardContent>
           </Card>
-        )}
+        ))}
       </div>
     </Layout>
   );
