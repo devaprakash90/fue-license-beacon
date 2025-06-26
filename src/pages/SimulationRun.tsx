@@ -8,6 +8,7 @@ import { Plus, Calendar, TrendingUp, TrendingDown } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const SimulationRun = () => {
+  const [hasChanges, setHasChanges] = useState(false);
   const [simulations] = useState([
     {
       id: 1,
@@ -41,17 +42,33 @@ const SimulationRun = () => {
     }
   ]);
 
+  const handleRunSimulation = () => {
+    if (hasChanges) {
+      // Run simulation logic here
+      console.log("Running simulation...");
+    }
+  };
+
   return (
     <Layout title="Simulation Run">
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-medium">Simulation Runs</h2>
-          <Link to="/create-simulation">
-            <Button className="flex items-center gap-2">
-              <Plus className="h-4 w-4" />
-              Create New Simulation
+          <div className="flex items-center gap-2">
+            <Link to="/create-simulation">
+              <Button className="flex items-center gap-2">
+                <Plus className="h-4 w-4" />
+                Create New Simulation
+              </Button>
+            </Link>
+            <Button 
+              onClick={handleRunSimulation}
+              disabled={!hasChanges}
+              className={`${hasChanges ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-400'} text-white`}
+            >
+              Run Simulation
             </Button>
-          </Link>
+          </div>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -60,7 +77,7 @@ const SimulationRun = () => {
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg">{simulation.name}</CardTitle>
-                  <Badge variant="outline" className="bg-green-100 text-green-800">
+                  <Badge variant="outline">
                     {simulation.status}
                   </Badge>
                 </div>

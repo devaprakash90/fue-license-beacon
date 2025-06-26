@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
@@ -15,7 +16,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Filter } from "lucide-react";
 
 const FueCalculation = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -36,6 +36,7 @@ const FueCalculation = () => {
     {
       id: "Z:SAP_MM_IM_GOODS_MOVEMENTS",
       profile: "Z:SAP_MM_IM_GOODS_MOVEMENTS",
+      description: "SAP Materials Management - Inventory Management Goods Movements",
       classification: "GB Advanced Use",
       gb: 1, gc: 2, gd: 28,
       assignedUsers: 337
@@ -43,6 +44,7 @@ const FueCalculation = () => {
     {
       id: "/SKYBFRHC_TEAMS_MAINTAIN_AD",
       profile: "/SKYBFRHC_TEAMS_MAINTAIN_AD", 
+      description: "Teams Maintenance Administration",
       classification: "GB Advanced Use",
       gb: 1, gc: 0, gd: 1,
       assignedUsers: 108
@@ -50,6 +52,7 @@ const FueCalculation = () => {
     {
       id: "/SKYBFRIDD_CC_TEAMS_ADMIN_SST",
       profile: "/SKYBFRIDD_CC_TEAMS_ADMIN_SST",
+      description: "Teams Administration Self-Service Tools",
       classification: "GB Advanced Use", 
       gb: 1, gc: 0, gd: 0,
       assignedUsers: 105
@@ -57,6 +60,7 @@ const FueCalculation = () => {
     {
       id: "ZUCM_SAP_INTNW_BMT_WFM_DEVELOP",
       profile: "ZUCM_SAP_INTNW_BMT_WFM_DEVELOP",
+      description: "SAP Internal Network Business Management Tools - Workflow Development",
       classification: "GB Advanced Use",
       gb: 1, gc: 0, gd: 0,
       assignedUsers: 3
@@ -64,6 +68,7 @@ const FueCalculation = () => {
     {
       id: "SAP_AIO_PURCHASER-S",
       profile: "SAP_AIO_PURCHASER-S",
+      description: "SAP All-in-One Purchaser Standard",
       classification: "GB Advanced Use",
       gb: 2, gc: 3, gd: 156,
       assignedUsers: 336
@@ -73,7 +78,8 @@ const FueCalculation = () => {
   const filteredRoles = roles.filter(role => {
     const matchesSearch = !searchTerm || 
       role.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      role.profile.toLowerCase().includes(searchTerm.toLowerCase());
+      role.profile.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      role.description.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesLicense = licenseFilter === "all" || 
       role.classification.toLowerCase().includes(licenseFilter.toLowerCase());
@@ -92,9 +98,9 @@ const FueCalculation = () => {
           <CardContent>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
               <div className="lg:col-span-1">
-                <div className="bg-yellow-100 p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-yellow-800">{fueCalculation.totalFue}</div>
-                  <div className="text-sm text-yellow-600">Full Use Equivalent</div>
+                <div className="border p-4 rounded-lg text-center">
+                  <div className="text-2xl font-bold">{fueCalculation.totalFue}</div>
+                  <div className="text-sm text-gray-600">Full Use Equivalent</div>
                 </div>
               </div>
               <div className="lg:col-span-4">
@@ -181,14 +187,14 @@ const FueCalculation = () => {
                         </Link>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline" className="bg-orange-100 text-orange-800">
+                        <Badge variant="outline">
                           {role.classification}
                         </Badge>
                       </TableCell>
                       <TableCell>{role.gb}</TableCell>
                       <TableCell>{role.gc}</TableCell>
                       <TableCell>{role.gd}</TableCell>
-                      <TableCell className="bg-yellow-100 font-medium">{role.assignedUsers}</TableCell>
+                      <TableCell className="font-medium">{role.assignedUsers}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
