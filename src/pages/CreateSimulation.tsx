@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,16 +12,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Pencil, Save } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ArrowLeft, Save, RotateCcw } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const CreateSimulation = () => {
-  const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [licenseFilter, setLicenseFilter] = useState("all");
+  const [selectedRole, setSelectedRole] = useState<any>(null);
+  const [editedObjects, setEditedObjects] = useState<any[]>([]);
   const [hasChanges, setHasChanges] = useState(false);
-  const [editedRoles, setEditedRoles] = useState<any[]>([]);
 
-  // All roles data (similar to FUE Calculation)
+  // All roles data
   const roles = [
     {
       id: "Z:SAP_MM_IM_GOODS_MOVEMENTS",
@@ -130,8 +133,6 @@ const CreateSimulation = () => {
     }
   ];
 
-  const [selectedRoles, setSelectedRoles] = useState<any[]>([]);
-
   const licenseOptions = [
     "01 (Create)/GC Core Use",
     "02 (Change)/GC Core Use", 
@@ -140,107 +141,119 @@ const CreateSimulation = () => {
     "F4 (Look Up)/GD Self-Service Use"
   ];
 
-  const handleEdit = () => {
-    setIsEditing(true);
-    setEditedRoles([...roles]);
+  // Filter roles based on search and license type
+  const filteredRoles = roles.filter(role => {
+    const matchesSearch = role.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         role.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesLicense = licenseFilter === "all" || role.classification.includes(licenseFilter);
+    return matchesSearch && matchesLicense;
+  }).slice(0, 10); // Show only 10 entries
+
+  const handleRoleSelect = (role: any) => {
+    setSelectedRole(role);
+    setEditedObjects([...role.objects]);
+  };
+
+  const updateObjectAction = (objectId: number, action: string) => {
+    setEditedObjects(prev => 
+      prev.map(obj => 
+        obj.id === objectId ? { ...obj, action, newValue: action === "Remove" ? "" : obj.newValue } : obj
+      )
+    );
+    setHasChanges(true);
+  };
+
+  const updateObjectNewValue = (objectId: number, newValue: string) => {
+    setEditedObjects(prev => 
+      prev.map(obj => 
+        obj.id === objectId ? { ...obj, newValue } : obj
+      )
+    );
+    setHasChanges(true);
   };
 
   const handleSave = () => {
-    setIsEditing(false);
-    setHasChanges(true);
-    console.log("Saving changes:", editedRoles);
+    console.log("Saving changes for role:", selectedRole?.id, "Objects:", editedObjects);
+    // Here you would update the role's objects with the changes
   };
 
-  const handleRestore = () => {
-    setEditedRoles([...roles]);
-  };
-
-  const handleRunSimulation = () => {
-    if (hasChanges) {
-      console.log("Running simulation with changes...");
-      // Here you would save the changes to database and run simulation
+  const handleReset = () => {
+    if (selectedRole) {
+      setEditedObjects([...selectedRole.objects]);
+      setHasChanges(false);
     }
   };
 
-  const updateObjectAction = (roleId: string, objectId: number, action: string) => {
-    setEditedRoles(prev => 
-      prev.map(role => 
-        role.id === roleId 
-          ? {
-              ...role,
-              objects: role.objects.map((obj: any) => 
-                obj.id === objectId ? { ...obj, action, newValue: action === "Remove" ? "" : obj.newValue } : obj
-              )
-            }
-          : role
-      )
-    );
+  const handleRunSimulation = () => {
+    // Create a new simulation entry and navigate back
+    const newSimulation = {
+      id: Date.now(),
+      name: `Simulation Run ${Date.now()}`,
+      date: new Date().toISOString().split('T')[0],
+      time: new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }),
+      simulationFue: Math.floor(Math.random() * 50) + 250,
+      actualFue: 306,
+      savings: Math.floor(Math.random() * 40) - 10,
+      status: "Running"
+    };
+    
+    console.log("Creating new simulation:", newSimulation);
+    navigate("/simulation-run");
   };
-
-  const updateObjectNewValue = (roleId: string, objectId: number, newValue: string) => {
-    setEditedRoles(prev => 
-      prev.map(role => 
-        role.id === roleId 
-          ? {
-              ...role,
-              objects: role.objects.map((obj: any) => 
-                obj.id === objectId ? { ...obj, newValue } : obj
-              )
-            }
-          : role
-      )
-    );
-  };
-
-  const currentRoles = isEditing ? editedRoles : roles;
 
   return (
-    <Layout title="Create Simulation">
+    <Layout title="Create New Simulation">
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <Link to="/simulation-run" className="flex items-center text-blue-600">
             <ArrowLeft className="mr-1 h-4 w-4" /> Back to Simulation Run
           </Link>
-          <div className="flex items-center gap-2">
-            {!isEditing ? (
-              <Button onClick={handleEdit} className="flex items-center gap-2">
-                <Pencil className="h-4 w-4" />
-                Edit Roles
-              </Button>
-            ) : (
-              <>
-                <Button variant="outline" onClick={handleRestore}>
-                  Restore
-                </Button>
-                <Button onClick={handleSave} className="flex items-center gap-2">
-                  <Save className="h-4 w-4" />
-                  Save Changes
-                </Button>
-              </>
-            )}
-            {hasChanges && (
-              <Button 
-                onClick={handleRunSimulation}
-                className="bg-red-600 hover:bg-red-700 text-white"
-              >
-                Run Simulation
-              </Button>
-            )}
-          </div>
         </div>
 
-        {/* Roles Table */}
+        {/* First Part: Filter Roles */}
         <Card>
           <CardHeader>
-            <CardTitle>All Roles for Simulation</CardTitle>
+            <CardTitle>Filter Roles</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Search by Role ID or Description</label>
+                <Input
+                  placeholder="Enter role ID or description..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">License Type</label>
+                <Select value={licenseFilter} onValueChange={setLicenseFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="All License Types" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All License Types</SelectItem>
+                    <SelectItem value="GB Advanced Use">GB Advanced Use</SelectItem>
+                    <SelectItem value="GC Core Use">GC Core Use</SelectItem>
+                    <SelectItem value="GD Self-Service Use">GD Self-Service Use</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Second Part: Role Summary Table */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Role Summary</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-y-auto max-h-96">
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Role/Profile</TableHead>
-                    <TableHead>Description</TableHead>
                     <TableHead>Authorization Classification</TableHead>
                     <TableHead>GB</TableHead>
                     <TableHead>GC</TableHead>
@@ -249,17 +262,16 @@ const CreateSimulation = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {currentRoles.map((role) => (
-                    <TableRow key={role.id}>
-                      <TableCell className="font-medium">
+                  {filteredRoles.map((role) => (
+                    <TableRow 
+                      key={role.id} 
+                      className={`cursor-pointer hover:bg-gray-50 ${selectedRole?.id === role.id ? 'bg-blue-50' : ''}`}
+                      onClick={() => handleRoleSelect(role)}
+                    >
+                      <TableCell className="font-medium text-blue-600">
                         {role.id}
                       </TableCell>
-                      <TableCell>{role.description}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline">
-                          {role.classification}
-                        </Badge>
-                      </TableCell>
+                      <TableCell>{role.classification}</TableCell>
                       <TableCell>{role.gb}</TableCell>
                       <TableCell>{role.gc}</TableCell>
                       <TableCell>{role.gd}</TableCell>
@@ -272,12 +284,26 @@ const CreateSimulation = () => {
           </CardContent>
         </Card>
 
-        {/* Authorization Objects for Each Role */}
-        {isEditing && currentRoles.map((role) => (
-          <Card key={role.id}>
+        {/* Third Part: Authorization Objects Table */}
+        {selectedRole && (
+          <Card>
             <CardHeader>
-              <CardTitle>Authorization Objects - {role.id}</CardTitle>
-              <p className="text-sm text-gray-600">Description: {role.description}</p>
+              <div className="flex justify-between items-center">
+                <div>
+                  <CardTitle>Authorization Objects - {selectedRole.id}</CardTitle>
+                  <p className="text-sm text-gray-600 mt-1">Description: {selectedRole.description}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={handleReset}>
+                    <RotateCcw className="h-4 w-4 mr-2" />
+                    Reset
+                  </Button>
+                  <Button onClick={handleSave}>
+                    <Save className="h-4 w-4 mr-2" />
+                    Save
+                  </Button>
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -294,21 +320,17 @@ const CreateSimulation = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {role.objects.map((obj: any) => (
+                    {editedObjects.map((obj) => (
                       <TableRow key={obj.id}>
                         <TableCell className="font-medium">{obj.object}</TableCell>
-                        <TableCell>
-                          <Badge variant="outline">
-                            {obj.classification}
-                          </Badge>
-                        </TableCell>
+                        <TableCell>{obj.classification}</TableCell>
                         <TableCell>{obj.fieldName}</TableCell>
                         <TableCell>{obj.valueLow}</TableCell>
                         <TableCell>{obj.valueHigh}</TableCell>
                         <TableCell>
                           <Select 
                             value={obj.action || ""} 
-                            onValueChange={(value) => updateObjectAction(role.id, obj.id, value)}
+                            onValueChange={(value) => updateObjectAction(obj.id, value)}
                           >
                             <SelectTrigger className="w-full">
                               <SelectValue placeholder="Select action" />
@@ -324,7 +346,7 @@ const CreateSimulation = () => {
                           {obj.action && obj.action !== "Remove" && (
                             <Select 
                               value={obj.newValue || ""} 
-                              onValueChange={(value) => updateObjectNewValue(role.id, obj.id, value)}
+                              onValueChange={(value) => updateObjectNewValue(obj.id, value)}
                             >
                               <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Select new value" />
@@ -346,7 +368,20 @@ const CreateSimulation = () => {
               </div>
             </CardContent>
           </Card>
-        ))}
+        )}
+
+        {/* Run Simulation Button */}
+        {hasChanges && (
+          <div className="flex justify-center pt-4">
+            <Button 
+              onClick={handleRunSimulation}
+              className="bg-red-600 hover:bg-red-700 text-white px-8 py-2"
+              size="lg"
+            >
+              Run Simulation
+            </Button>
+          </div>
+        )}
       </div>
     </Layout>
   );

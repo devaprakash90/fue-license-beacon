@@ -17,7 +17,8 @@ const SimulationRun = () => {
       simulationFue: 280,
       actualFue: 306,
       savings: 26,
-      status: "Completed"
+      status: "Completed",
+      description: "SAP Materials Management optimization analysis"
     },
     {
       id: 2,
@@ -27,7 +28,8 @@ const SimulationRun = () => {
       simulationFue: 295,
       actualFue: 306,
       savings: 11,
-      status: "Completed"
+      status: "Completed",
+      description: "Teams Administration roles optimization"
     },
     {
       id: 3,
@@ -37,9 +39,23 @@ const SimulationRun = () => {
       simulationFue: 310,
       actualFue: 306,
       savings: -4,
-      status: "Completed"
+      status: "Completed",
+      description: "Workflow Development tools analysis"
     }
   ]);
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "Completed":
+        return "bg-green-100 text-green-800";
+      case "Running":
+        return "bg-yellow-100 text-yellow-800";
+      case "Failed":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
 
   return (
     <Layout title="Simulation Run">
@@ -60,7 +76,7 @@ const SimulationRun = () => {
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg">{simulation.name}</CardTitle>
-                  <Badge variant="outline">
+                  <Badge className={getStatusColor(simulation.status)}>
                     {simulation.status}
                   </Badge>
                 </div>
@@ -68,6 +84,7 @@ const SimulationRun = () => {
                   <Calendar className="h-4 w-4 mr-1" />
                   {simulation.date} at {simulation.time}
                 </div>
+                <p className="text-sm text-gray-600 mt-2">{simulation.description}</p>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">

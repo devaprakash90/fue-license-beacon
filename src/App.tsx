@@ -14,6 +14,7 @@ import UserOptimizationResults from "./pages/UserOptimizationResults";
 import FueCalculation from "./pages/FueCalculation";
 import SimulationRun from "./pages/SimulationRun";
 import CreateSimulation from "./pages/CreateSimulation";
+import SimulationDetails from "./pages/SimulationDetails";
 import RoleDetails from "./pages/RoleDetails";
 import LogManagement from "./pages/LogManagement";
 import ViewLogs from "./pages/ViewLogs";
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/fue-calculation" element={<FueCalculation />} />
           <Route path="/simulation-run" element={<SimulationRun />} />
           <Route path="/create-simulation" element={<CreateSimulation />} />
+          <Route path="/simulation-details/:simulationId" element={<SimulationDetails />} />
           <Route path="/role-details/:roleId" element={<RoleDetails />} />
           <Route path="/simulation-role-details/:roleId" element={<RoleDetails />} />
           <Route path="/log-management" element={<LogManagement />} />
