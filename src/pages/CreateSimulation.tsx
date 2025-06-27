@@ -1,19 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
-import { ArrowLeft, Save, RotateCcw, Pencil, Plus } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import FilterRoles from "@/components/FilterRoles";
+import RoleProfileSummary from "@/components/RoleProfileSummary";
+import AuthorizationObjects from "@/components/AuthorizationObjects";
+import { ArrowLeft } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 const CreateSimulation = () => {
@@ -422,14 +413,6 @@ const CreateSimulation = () => {
     }
   ];
 
-  const licenseOptions = [
-    "01 (Create)/GC Core Use",
-    "02 (Change)/GC Core Use", 
-    "03 (Display)/GD Self-Service Use",
-    "16 (Execute)/GD Self-Service Use",
-    "F4 (Look Up)/GD Self-Service Use"
-  ];
-
   // Filter roles based on search and license type
   const filteredRoles = roles.filter(role => {
     const matchesSearch = role.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -542,246 +525,33 @@ const CreateSimulation = () => {
           </Link>
         </div>
 
-        {/* First Part: Filter Roles */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Filter Roles</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Search by Role ID or Description</label>
-                <Input
-                  placeholder="Enter role ID or description..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">License Type</label>
-                <Select value={licenseFilter} onValueChange={setLicenseFilter}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="All License Types" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All License Types</SelectItem>
-                    <SelectItem value="GB Advanced Use">GB Advanced Use</SelectItem>
-                    <SelectItem value="GC Core Use">GC Core Use</SelectItem>
-                    <SelectItem value="GD Self-Service Use">GD Self-Service Use</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <FilterRoles
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          licenseFilter={licenseFilter}
+          setLicenseFilter={setLicenseFilter}
+        />
 
-        {/* Second Part: Role/Profile Summary Table with Run Simulation Button */}
-        <Card>
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <CardTitle>Role/Profile Summary</CardTitle>
-              <Button 
-                onClick={handleRunSimulation}
-                disabled={!savedChanges}
-                className="bg-orange-600 hover:bg-orange-700 text-white disabled:bg-gray-400 disabled:cursor-not-allowed"
-              >
-                Run Simulation
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-y-auto max-h-96">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Role/Profile</TableHead>
-                    <TableHead>Authorization Classification</TableHead>
-                    <TableHead>GB</TableHead>
-                    <TableHead>GC</TableHead>
-                    <TableHead>GD</TableHead>
-                    <TableHead>Assigned to Users</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredRoles.map((role) => (
-                    <TableRow 
-                      key={role.id} 
-                      className={`cursor-pointer hover:bg-gray-50 ${selectedRole?.id === role.id ? 'bg-blue-50' : ''}`}
-                      onClick={() => handleRoleSelect(role)}
-                    >
-                      <TableCell className="font-medium text-blue-600">
-                        {role.id}
-                      </TableCell>
-                      <TableCell>{role.classification}</TableCell>
-                      <TableCell>{role.gb}</TableCell>
-                      <TableCell>{role.gc}</TableCell>
-                      <TableCell>{role.gd}</TableCell>
-                      <TableCell className="font-medium">{role.assignedUsers}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
+        <RoleProfileSummary
+          filteredRoles={filteredRoles}
+          selectedRole={selectedRole}
+          onRoleSelect={handleRoleSelect}
+          onRunSimulation={handleRunSimulation}
+          savedChanges={savedChanges}
+        />
 
-        {/* Third Part: Authorization Objects Table */}
-        {selectedRole && (
-          <Card>
-            <CardHeader>
-              <div className="flex justify-between items-center">
-                <div>
-                  <CardTitle>Authorization Objects - {selectedRole.id}</CardTitle>
-                  <p className="text-sm text-gray-600 mt-1">Description: {selectedRole.description}</p>
-                </div>
-                <div className="flex gap-2">
-                  {!isEditing ? (
-                    <Button onClick={handleEditClick} variant="outline">
-                      <Pencil className="h-4 w-4 mr-2" />
-                      Edit
-                    </Button>
-                  ) : (
-                    <>
-                      <Button variant="outline" onClick={handleReset}>
-                        <RotateCcw className="h-4 w-4 mr-2" />
-                        Reset
-                      </Button>
-                      <Button onClick={handleSave}>
-                        <Save className="h-4 w-4 mr-2" />
-                        Save
-                      </Button>
-                      <Button onClick={handleAddObject} variant="outline" size="sm">
-                        <Plus className="h-4 w-4 mr-2" />
-                        Add Object
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Object</TableHead>
-                      <TableHead>Classification</TableHead>
-                      <TableHead>Field Name</TableHead>
-                      <TableHead>Value Low</TableHead>
-                      <TableHead>Value High</TableHead>
-                      {isEditing && <TableHead>Action</TableHead>}
-                      {isEditing && <TableHead>New Value</TableHead>}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {editedObjects.map((obj) => (
-                      <TableRow key={obj.id}>
-                        <TableCell>
-                          {isEditing && obj.isNew ? (
-                            <Input 
-                              value={obj.object} 
-                              onChange={(e) => updateObjectField(obj.id, 'object', e.target.value)}
-                              placeholder="Enter object"
-                            />
-                          ) : (
-                            <span className="font-medium">{obj.object}</span>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {obj.isNew ? (
-                            <span className="text-gray-400">-</span>
-                          ) : (
-                            obj.classification
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {isEditing && obj.isNew ? (
-                            <Input 
-                              value={obj.fieldName} 
-                              onChange={(e) => updateObjectField(obj.id, 'fieldName', e.target.value)}
-                              placeholder="Enter field name"
-                            />
-                          ) : (
-                            obj.fieldName
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {isEditing && obj.isNew ? (
-                            <Input 
-                              value={obj.valueLow} 
-                              onChange={(e) => updateObjectField(obj.id, 'valueLow', e.target.value)}
-                              placeholder="Enter value low"
-                            />
-                          ) : (
-                            obj.valueLow
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {isEditing && obj.isNew ? (
-                            <Input 
-                              value={obj.valueHigh} 
-                              onChange={(e) => updateObjectField(obj.id, 'valueHigh', e.target.value)}
-                              placeholder="Enter value high"
-                            />
-                          ) : (
-                            obj.valueHigh
-                          )}
-                        </TableCell>
-                        {isEditing && (
-                          <TableCell>
-                            <Select 
-                              value={obj.action || ""} 
-                              onValueChange={(value) => updateObjectAction(obj.id, value)}
-                              disabled={obj.isNew}
-                            >
-                              <SelectTrigger className="w-full">
-                                <SelectValue placeholder={obj.isNew ? "Add" : "Select action"} />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {obj.isNew ? (
-                                  <SelectItem value="Add">Add</SelectItem>
-                                ) : (
-                                  <>
-                                    <SelectItem value="Change">Change</SelectItem>
-                                    <SelectItem value="Remove">Remove</SelectItem>
-                                  </>
-                                )}
-                              </SelectContent>
-                            </Select>
-                          </TableCell>
-                        )}
-                        {isEditing && (
-                          <TableCell>
-                            {obj.action && obj.action !== "Remove" && !obj.isNew && (
-                              <Select 
-                                value={obj.newValue || ""} 
-                                onValueChange={(value) => updateObjectNewValue(obj.id, value)}
-                              >
-                                <SelectTrigger className="w-full">
-                                  <SelectValue placeholder="Select new value" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {licenseOptions.map((option) => (
-                                    <SelectItem key={option} value={option}>
-                                      {option}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            )}
-                            {obj.isNew && (
-                              <span className="text-gray-400">-</span>
-                            )}
-                          </TableCell>
-                        )}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        <AuthorizationObjects
+          selectedRole={selectedRole}
+          editedObjects={editedObjects}
+          isEditing={isEditing}
+          onEditClick={handleEditClick}
+          onSave={handleSave}
+          onReset={handleReset}
+          onAddObject={handleAddObject}
+          updateObjectAction={updateObjectAction}
+          updateObjectNewValue={updateObjectNewValue}
+          updateObjectField={updateObjectField}
+        />
       </div>
     </Layout>
   );
