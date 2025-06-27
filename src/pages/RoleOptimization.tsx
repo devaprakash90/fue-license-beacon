@@ -5,7 +5,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import MultiSelect, { Option } from "@/components/MultiSelect";
 import OptimizationRequestsTable from "@/components/OptimizationRequestsTable";
 import { Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,13 +20,13 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 const RoleOptimization = () => {
   const { toast } = useToast();
   const [roleIds, setRoleIds] = useState<string>("");
-  const [selectedLicenses, setSelectedLicenses] = useState<string[]>([]);
+  const [selectedLicense, setSelectedLicense] = useState<string>("");
   const [ratioValue, setRatioValue] = useState<string>("");
   const [isFilterOpen, setIsFilterOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   
   // Fixed license types as per requirements
-  const licenseOptions: Option[] = [
+  const licenseOptions = [
     { value: "gb_advanced", label: "GB Advanced Use" },
     { value: "gc_core", label: "GC Core Use" },
     { value: "gd_self_service", label: "GD Self-Service Use" }
@@ -78,7 +77,7 @@ const RoleOptimization = () => {
     
     const filters = {
       roleIds: roleIdArray.length > 0 ? roleIdArray : null,
-      licenses: selectedLicenses.length > 0 ? selectedLicenses : null,
+      license: selectedLicense || null,
       ratio: ratioValue.trim() || null,
     };
     
@@ -87,7 +86,7 @@ const RoleOptimization = () => {
   
   const handleClear = () => {
     setRoleIds("");
-    setSelectedLicenses([]);
+    setSelectedLicense("");
     setRatioValue("");
   };
 
@@ -123,14 +122,20 @@ const RoleOptimization = () => {
                 
                 <div className="space-y-2">
                   <label className="text-sm font-medium">
-                    License Type(s)
+                    License Type
                   </label>
-                  <MultiSelect
-                    options={licenseOptions}
-                    selectedValues={selectedLicenses}
-                    onSelectionChange={setSelectedLicenses}
-                    placeholder="Select license types"
-                  />
+                  <Select value={selectedLicense} onValueChange={setSelectedLicense}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select license type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {licenseOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 
                 <div className="space-y-2">

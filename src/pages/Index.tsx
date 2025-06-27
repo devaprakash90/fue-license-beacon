@@ -12,7 +12,8 @@ import {
   FileText,
   Settings,
   Brain,
-  HardDrive
+  HardDrive,
+  Eye
 } from "lucide-react";
 
 const Index = () => {
@@ -40,6 +41,12 @@ const Index = () => {
               description="Monitor system logs and audit trails"
               icon={FileText}
               href="/log-management"
+            />
+            <FeatureCard
+              title="View Logs"
+              description="View detailed system logs and activities"
+              icon={Eye}
+              href="/view-logs"
             />
           </div>
         </section>
