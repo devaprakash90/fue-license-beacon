@@ -29,45 +29,86 @@ const SimulationDetails = () => {
     status: "Completed"
   };
 
-  // Mock changes data
-  const changes = [
+  // Mock changes data grouped by role
+  const roleChanges = [
     {
-      id: 1,
       roleId: "Z:SAP_MM_IM_GOODS_MOVEMENTS",
       roleDescription: "SAP Materials Management - Inventory Management Goods Movements",
-      changeType: "License Reduction",
-      from: "GB Advanced Use",
-      to: "GC Core Use",
-      authObject: "M_EINF_EKO",
-      field: "ACTVT",
-      valueLow: "01",
-      valueHigh: ""
+      currentLicense: "GB Advanced Use",
+      simulatedLicense: "GC Core Use",
+      changes: [
+        {
+          id: 1,
+          authObject: "M_EINF_EKO",
+          field: "ACTVT",
+          valueLow: "01",
+          valueHigh: "",
+          operation: "Change"
+        },
+        {
+          id: 2,
+          authObject: "M_BANF_EKG",
+          field: "ACTVT",
+          valueLow: "02",
+          valueHigh: "03",
+          operation: "Add"
+        }
+      ]
     },
     {
-      id: 2,
       roleId: "/SKYBFRHC_TEAMS_MAINTAIN_AD",
       roleDescription: "Teams Maintenance Administration",
-      changeType: "Object Removal",
-      from: "S_USER_GRP",
-      to: "Removed",
-      authObject: "S_USER_GRP",
-      field: "CLASS",
-      valueLow: "*",
-      valueHigh: ""
+      currentLicense: "GB Advanced Use",
+      simulatedLicense: "Removed",
+      changes: [
+        {
+          id: 3,
+          authObject: "S_USER_GRP",
+          field: "CLASS",
+          valueLow: "*",
+          valueHigh: "",
+          operation: "Remove"
+        }
+      ]
     },
     {
-      id: 3,
       roleId: "SAP_AIO_PURCHASER-S",
       roleDescription: "SAP All-in-One Purchaser Standard",
-      changeType: "License Optimization",
-      from: "GB Advanced Use",
-      to: "GD Self-Service Use",
-      authObject: "M_BANF_EKG",
-      field: "ACTVT",
-      valueLow: "01",
-      valueHigh: ""
+      currentLicense: "GB Advanced Use",
+      simulatedLicense: "GD Self-Service Use",
+      changes: [
+        {
+          id: 4,
+          authObject: "M_BANF_EKG",
+          field: "ACTVT",
+          valueLow: "01",
+          valueHigh: "",
+          operation: "Change"
+        },
+        {
+          id: 5,
+          authObject: "M_EINK_FRG",
+          field: "FRGCO",
+          valueLow: "M",
+          valueHigh: "",
+          operation: "Add"
+        }
+      ]
     }
   ];
+
+  const getOperationBadgeColor = (operation: string) => {
+    switch (operation) {
+      case "Add":
+        return "bg-green-100 text-green-800";
+      case "Remove":
+        return "bg-red-100 text-red-800";
+      case "Change":
+        return "bg-blue-100 text-blue-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
 
   return (
     <Layout title="Simulation Details">
@@ -123,45 +164,66 @@ const SimulationDetails = () => {
           </CardContent>
         </Card>
 
-        {/* Changes Made */}
+        {/* Changes Made - Hierarchical View */}
         <Card>
           <CardHeader>
             <CardTitle>Changes Made</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Role ID</TableHead>
-                    <TableHead>Role Description</TableHead>
-                    <TableHead>Change Type</TableHead>
-                    <TableHead>From</TableHead>
-                    <TableHead>To</TableHead>
-                    <TableHead>Auth Object</TableHead>
-                    <TableHead>Field</TableHead>
-                    <TableHead>Value Low</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {changes.map((change) => (
-                    <TableRow key={change.id}>
-                      <TableCell className="font-medium">{change.roleId}</TableCell>
-                      <TableCell>{change.roleDescription}</TableCell>
-                      <TableCell>
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          {change.changeType}
-                        </span>
-                      </TableCell>
-                      <TableCell>{change.from}</TableCell>
-                      <TableCell>{change.to}</TableCell>
-                      <TableCell>{change.authObject}</TableCell>
-                      <TableCell>{change.field}</TableCell>
-                      <TableCell>{change.valueLow}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+            <div className="space-y-6">
+              {roleChanges.map((role) => (
+                <div key={role.roleId} className="border border-gray-200 rounded-lg p-4">
+                  {/* Role Header */}
+                  <div className="mb-4 pb-3 border-b border-gray-100">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                      <div>
+                        <h3 className="font-semibold text-lg text-gray-900">{role.roleId}</h3>
+                        <p className="text-sm text-gray-600">{role.roleDescription}</p>
+                      </div>
+                      <div className="flex flex-col md:flex-row gap-4 text-sm">
+                        <div>
+                          <span className="font-medium text-gray-700">Current License: </span>
+                          <span className="text-gray-900">{role.currentLicense}</span>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">Simulated License: </span>
+                          <span className="text-gray-900">{role.simulatedLicense}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Changes Table */}
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Authorization Object</TableHead>
+                          <TableHead>Field</TableHead>
+                          <TableHead>Value Low</TableHead>
+                          <TableHead>Value High</TableHead>
+                          <TableHead>Operation</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {role.changes.map((change) => (
+                          <TableRow key={change.id}>
+                            <TableCell className="font-medium">{change.authObject}</TableCell>
+                            <TableCell>{change.field}</TableCell>
+                            <TableCell>{change.valueLow}</TableCell>
+                            <TableCell>{change.valueHigh || "-"}</TableCell>
+                            <TableCell>
+                              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getOperationBadgeColor(change.operation)}`}>
+                                {change.operation}
+                              </span>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
