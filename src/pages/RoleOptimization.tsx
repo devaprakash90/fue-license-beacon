@@ -4,6 +4,7 @@ import Layout from "@/components/Layout";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MultiSelect, { Option } from "@/components/MultiSelect";
 import OptimizationRequestsTable from "@/components/OptimizationRequestsTable";
 import { Loader2 } from "lucide-react";
@@ -92,8 +93,8 @@ const RoleOptimization = () => {
 
   const handleRatioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // Only allow positive numbers (integers and decimals)
-    if (value === "" || (parseFloat(value) > 0 && !isNaN(parseFloat(value)))) {
+    // Only allow whole numbers from 1 to 100
+    if (value === "" || (/^\d+$/.test(value) && parseInt(value) >= 1 && parseInt(value) <= 100)) {
       setRatioValue(value);
     }
   };
@@ -134,16 +135,17 @@ const RoleOptimization = () => {
                 
                 <div className="space-y-2">
                   <label className="text-sm font-medium">
-                    Ratio
+                    Ratio (1-100)
                   </label>
                   <Input
-                    placeholder="Enter positive numeric ratio value"
+                    placeholder="Enter ratio value (1-100)"
                     value={ratioValue}
                     onChange={handleRatioChange}
-                    type="number"
-                    min="0"
-                    step="0.01"
+                    type="text"
                   />
+                  <p className="text-xs text-gray-500">
+                    Whole numbers only, range: 1-100
+                  </p>
                 </div>
               </div>
               

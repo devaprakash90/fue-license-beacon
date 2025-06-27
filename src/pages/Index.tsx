@@ -2,95 +2,107 @@
 import React from "react";
 import Layout from "@/components/Layout";
 import FeatureCard from "@/components/FeatureCard";
-import { Upload, FileText, Database, UserCog, User, BarChart, ListFilter, Calculator, Play } from "lucide-react";
+import { 
+  Upload, 
+  Database, 
+  TrendingUp, 
+  Users, 
+  Calculator, 
+  Play, 
+  FileText,
+  Settings,
+  Brain,
+  HardDrive
+} from "lucide-react";
 
 const Index = () => {
   return (
     <Layout title="" showBackButton={false}>
-      <div className="space-y-8">
-        {/* Master Data Section */}
+      <div className="space-y-12">
+        {/* Data Management Section */}
         <section>
-          <h2 className="section-title">Master Data</h2>
-          <div className="card-grid">
-            <FeatureCard 
-              title="Upload File" 
-              description="Upload files with the latest data"
-              link="/upload-file"
-              icon={<Upload size={24} />}
+          <h2 className="section-title">Data Management</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <FeatureCard
+              title="Upload File"
+              description="Upload your SAP data files for analysis and optimization"
+              icon={Upload}
+              href="/upload-file"
             />
-            
-            <FeatureCard 
-              title="File Upload Status" 
-              description="Monitor and verify file upload status"
-              link="/upload-status"
-              icon={<FileText size={24} />}
+            <FeatureCard
+              title="Manage Data"
+              description="View, edit, and organize your uploaded data"
+              icon={Database}
+              href="/manage-data"
             />
-            
-            <FeatureCard 
-              title="Manage Data" 
-              description="Download and maintain uploaded data"
-              link="/manage-data"
-              icon={<Database size={24} />}
+            <FeatureCard
+              title="Log Management"
+              description="Monitor system logs and audit trails"
+              icon={FileText}
+              href="/log-management"
             />
           </div>
         </section>
-        
-        {/* License Optimizer Section */}
+
+        {/* Optimization Section */}
         <section>
-          <h2 className="section-title">License Optimizer</h2>
-          <div className="card-grid">
-            <FeatureCard 
-              title="Role Level Optimization" 
-              description="Optimize license assignments at role level"
-              link="/role-optimization"
-              icon={<UserCog size={24} />}
+          <h2 className="section-title">License Optimization</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <FeatureCard
+              title="Role Level Optimization"
+              description="Optimize licenses at the role level for maximum efficiency"
+              icon={TrendingUp}
+              href="/role-optimization"
             />
-            
-            <FeatureCard 
-              title="User Level Optimization" 
-              description="Optimize license assignments at user level"
-              link="/user-optimization"
-              icon={<User size={24} />}
+            <FeatureCard
+              title="User Level Optimization"
+              description="Analyze and optimize licenses for individual users"
+              icon={Users}
+              href="/user-optimization"
+            />
+            <FeatureCard
+              title="FUE Calculation"
+              description="Calculate Full Use Equivalent values for your licenses"
+              icon={Calculator}
+              href="/fue-calculation"
             />
           </div>
         </section>
 
         {/* Simulation Section */}
         <section>
-          <h2 className="section-title">Simulation</h2>
-          <div className="card-grid">
-            <FeatureCard 
-              title="FUE Calculation" 
-              description="View FUE calculation and role analysis"
-              link="/fue-calculation"
-              icon={<Calculator size={24} />}
+          <h2 className="section-title">Simulation & Testing</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FeatureCard
+              title="Simulation Run"
+              description="Run simulations to test optimization scenarios"
+              icon={Play}
+              href="/simulation-run"
             />
-            
-            <FeatureCard 
-              title="Simulation Run" 
-              description="Run simulations to calculate FUE requirements"
-              link="/simulation-run"
-              icon={<Play size={24} />}
+            <FeatureCard
+              title="Create New Simulation"
+              description="Set up new simulation scenarios for testing"
+              icon={Settings}
+              href="/create-simulation"
             />
           </div>
         </section>
 
-        {/* Troubleshooting & Logs Section */}
+        {/* Configuration Section */}
         <section>
-          <h2 className="section-title">Troubleshooting & Logs</h2>
-          <div className="card-grid">
-            <FeatureCard 
-              title="Log Management" 
-              description="Manage system logs and troubleshooting data"
-              link="/log-management"
-              icon={<BarChart size={24} />}
+          <h2 className="section-title">Configuration</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FeatureCard
+              title="AI Config"
+              description="Configure AI models and API keys for optimization analysis"
+              icon={Brain}
+              href="/ai-config"
             />
-            
-            <FeatureCard 
-              title="View Logs" 
-              description="View and analyze detailed system logs"
-              link="/view-logs"
-              icon={<ListFilter size={24} />}
+            <FeatureCard
+              title="DB Config"
+              description="Set up database connections and configuration settings"
+              icon={HardDrive}
+              href="/db-config"
             />
           </div>
         </section>

@@ -18,6 +18,8 @@ import SimulationDetails from "./pages/SimulationDetails";
 import RoleDetails from "./pages/RoleDetails";
 import LogManagement from "./pages/LogManagement";
 import ViewLogs from "./pages/ViewLogs";
+import AIConfig from "./pages/AIConfig";
+import DBConfig from "./pages/DBConfig";
 import NotFound from "./pages/NotFound";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -46,6 +48,8 @@ const App = () => (
           <Route path="/simulation-role-details/:roleId" element={<RoleDetails />} />
           <Route path="/log-management" element={<LogManagement />} />
           <Route path="/view-logs" element={<ViewLogs />} />
+          <Route path="/ai-config" element={<AIConfig />} />
+          <Route path="/db-config" element={<DBConfig />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

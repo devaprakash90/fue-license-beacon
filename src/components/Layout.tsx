@@ -23,15 +23,18 @@ const Layout: React.FC<LayoutProps> = ({ children, title, showBackButton = true 
               <img 
                 src="/lovable-uploads/6127a027-5d08-4cb3-a06d-2bccd6710222.png" 
                 alt="Company Logo" 
-                className="h-8 w-auto mr-3"
+                className="h-12 w-auto mr-4"
               />
             </div>
             <div className="flex-1 text-center">
               <Link to="/" className="text-xl font-bold">
                 FUE Optimizer Pro
               </Link>
+              <div className="text-xs text-gray-300 mt-1">
+                Powered by AI
+              </div>
             </div>
-            <div className="w-8"></div>
+            <div className="w-16"></div>
           </div>
         </div>
       </header>
@@ -51,7 +54,7 @@ const Layout: React.FC<LayoutProps> = ({ children, title, showBackButton = true 
       <footer className="bg-gray-100 border-t border-gray-200">
         <div className="page-container py-4">
           <p className="text-center text-gray-600 text-sm">
-            &copy; {new Date().getFullYear()} FUE Optimizer Pro
+            &copy; {new Date().getFullYear()} FUE Optimizer Pro - AI Powered Solution
           </p>
         </div>
       </footer>

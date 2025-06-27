@@ -38,7 +38,6 @@ const SimulationDetails = () => {
       changeType: "License Reduction",
       from: "GB Advanced Use",
       to: "GC Core Use",
-      impact: "Reduced 15 FUE",
       authObject: "M_EINF_EKO",
       field: "ACTVT",
       valueLow: "01",
@@ -51,7 +50,6 @@ const SimulationDetails = () => {
       changeType: "Object Removal",
       from: "S_USER_GRP",
       to: "Removed",
-      impact: "Reduced 8 FUE",
       authObject: "S_USER_GRP",
       field: "CLASS",
       valueLow: "*",
@@ -64,7 +62,6 @@ const SimulationDetails = () => {
       changeType: "License Optimization",
       from: "GB Advanced Use",
       to: "GD Self-Service Use",
-      impact: "Reduced 12 FUE",
       authObject: "M_BANF_EKG",
       field: "ACTVT",
       valueLow: "01",
@@ -141,7 +138,6 @@ const SimulationDetails = () => {
                     <TableHead>Change Type</TableHead>
                     <TableHead>From</TableHead>
                     <TableHead>To</TableHead>
-                    <TableHead>Impact</TableHead>
                     <TableHead>Auth Object</TableHead>
                     <TableHead>Field</TableHead>
                     <TableHead>Value Low</TableHead>
@@ -159,9 +155,6 @@ const SimulationDetails = () => {
                       </TableCell>
                       <TableCell>{change.from}</TableCell>
                       <TableCell>{change.to}</TableCell>
-                      <TableCell>
-                        <span className="text-green-600 font-medium">{change.impact}</span>
-                      </TableCell>
                       <TableCell>{change.authObject}</TableCell>
                       <TableCell>{change.field}</TableCell>
                       <TableCell>{change.valueLow}</TableCell>
