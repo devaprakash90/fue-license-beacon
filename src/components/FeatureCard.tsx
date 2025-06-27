@@ -1,21 +1,22 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
+import { LucideIcon } from "lucide-react";
 
 interface FeatureCardProps {
   title: string;
   description?: string;
-  link: string;
-  icon?: React.ReactNode;
+  href: string;
+  icon?: LucideIcon;
 }
 
-const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, link, icon }) => {
+const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, href, icon: Icon }) => {
   return (
-    <Link to={link} className="feature-card group">
+    <Link to={href} className="feature-card group">
       <div className="feature-card-content">
         <div className="mb-4 flex justify-center">
           <div className="rounded-full bg-belize-100 p-3 text-belize-500 group-hover:bg-belize-500 group-hover:text-white transition-all">
-            {icon}
+            {Icon && <Icon size={24} />}
           </div>
         </div>
         <h3 className="feature-card-title text-center">{title}</h3>
