@@ -218,8 +218,8 @@ const FueCalculation = () => {
             <CardTitle className="text-xl">Full Use Equivalent Summary</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
+            <div className="grid gap-6 md:grid-cols-3">
+              <div className="md:col-span-2">
                 <div className="space-y-2">
                   <div className="grid grid-cols-3 gap-4 text-sm font-medium">
                     <div>Authorization Classification</div>
@@ -235,10 +235,10 @@ const FueCalculation = () => {
                   ))}
                 </div>
               </div>
-              <div className="flex justify-end">
-                <div className="border p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold">{fueCalculation.totalFue}</div>
-                  <div className="text-sm text-gray-600">Full Use Equivalent</div>
+              <div className="flex justify-center items-center">
+                <div className="border-2 border-blue-600 bg-blue-50 p-6 rounded-lg text-center">
+                  <div className="text-4xl font-bold text-blue-800">{fueCalculation.totalFue}</div>
+                  <div className="text-sm text-blue-600 font-medium mt-2">Full Use Equivalent</div>
                 </div>
               </div>
             </div>

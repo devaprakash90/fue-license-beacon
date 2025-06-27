@@ -44,7 +44,8 @@ const CreateSimulation = () => {
           valueLow: "01",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         },
         {
           id: 2,
@@ -54,7 +55,8 @@ const CreateSimulation = () => {
           valueLow: "02",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     },
@@ -73,7 +75,8 @@ const CreateSimulation = () => {
           valueLow: "*",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     },
@@ -92,7 +95,8 @@ const CreateSimulation = () => {
           valueLow: "01",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     },
@@ -111,7 +115,8 @@ const CreateSimulation = () => {
           valueLow: "Z*",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     },
@@ -130,7 +135,8 @@ const CreateSimulation = () => {
           valueLow: "01",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     },
@@ -149,7 +155,8 @@ const CreateSimulation = () => {
           valueLow: "02",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     },
@@ -168,7 +175,8 @@ const CreateSimulation = () => {
           valueLow: "01",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     },
@@ -187,7 +195,8 @@ const CreateSimulation = () => {
           valueLow: "01",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     },
@@ -206,7 +215,8 @@ const CreateSimulation = () => {
           valueLow: "03",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     },
@@ -225,7 +235,8 @@ const CreateSimulation = () => {
           valueLow: "02",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     },
@@ -244,7 +255,8 @@ const CreateSimulation = () => {
           valueLow: "02",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     },
@@ -263,7 +275,8 @@ const CreateSimulation = () => {
           valueLow: "03",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     },
@@ -282,7 +295,8 @@ const CreateSimulation = () => {
           valueLow: "02",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     },
@@ -301,7 +315,8 @@ const CreateSimulation = () => {
           valueLow: "03",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     },
@@ -320,7 +335,8 @@ const CreateSimulation = () => {
           valueLow: "SM*",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     },
@@ -339,7 +355,8 @@ const CreateSimulation = () => {
           valueLow: "03",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     },
@@ -358,7 +375,8 @@ const CreateSimulation = () => {
           valueLow: "03",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     },
@@ -377,7 +395,8 @@ const CreateSimulation = () => {
           valueLow: "01",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     },
@@ -396,7 +415,8 @@ const CreateSimulation = () => {
           valueLow: "02",
           valueHigh: "",
           action: null,
-          newValue: ""
+          newValue: "",
+          isNew: false
         }
       ]
     }
@@ -467,7 +487,8 @@ const CreateSimulation = () => {
       valueLow: "",
       valueHigh: "",
       action: "Add",
-      newValue: ""
+      newValue: "",
+      isNew: true
     };
     setEditedObjects(prev => [...prev, newObject]);
     setHasChanges(true);
@@ -478,6 +499,7 @@ const CreateSimulation = () => {
     console.log("Saving changes for role:", selectedRole?.id, "Objects:", editedObjects);
     setIsEditing(false);
     setSavedChanges(true);
+    setHasChanges(false);
     toast({
       title: "Changes Saved",
       description: "Role changes have been saved successfully.",
@@ -628,20 +650,16 @@ const CreateSimulation = () => {
                         <Save className="h-4 w-4 mr-2" />
                         Save
                       </Button>
+                      <Button onClick={handleAddObject} variant="outline" size="sm">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Object
+                      </Button>
                     </>
                   )}
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              {isEditing && (
-                <div className="mb-4">
-                  <Button onClick={handleAddObject} variant="outline" size="sm">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Object
-                  </Button>
-                </div>
-              )}
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -659,7 +677,7 @@ const CreateSimulation = () => {
                     {editedObjects.map((obj) => (
                       <TableRow key={obj.id}>
                         <TableCell>
-                          {isEditing && obj.action === "Add" ? (
+                          {isEditing && obj.isNew ? (
                             <Input 
                               value={obj.object} 
                               onChange={(e) => updateObjectField(obj.id, 'object', e.target.value)}
@@ -669,9 +687,15 @@ const CreateSimulation = () => {
                             <span className="font-medium">{obj.object}</span>
                           )}
                         </TableCell>
-                        <TableCell>{obj.classification}</TableCell>
                         <TableCell>
-                          {isEditing && obj.action === "Add" ? (
+                          {obj.isNew ? (
+                            <span className="text-gray-400">-</span>
+                          ) : (
+                            obj.classification
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {isEditing && obj.isNew ? (
                             <Input 
                               value={obj.fieldName} 
                               onChange={(e) => updateObjectField(obj.id, 'fieldName', e.target.value)}
@@ -682,7 +706,7 @@ const CreateSimulation = () => {
                           )}
                         </TableCell>
                         <TableCell>
-                          {isEditing && obj.action === "Add" ? (
+                          {isEditing && obj.isNew ? (
                             <Input 
                               value={obj.valueLow} 
                               onChange={(e) => updateObjectField(obj.id, 'valueLow', e.target.value)}
@@ -693,7 +717,7 @@ const CreateSimulation = () => {
                           )}
                         </TableCell>
                         <TableCell>
-                          {isEditing && obj.action === "Add" ? (
+                          {isEditing && obj.isNew ? (
                             <Input 
                               value={obj.valueHigh} 
                               onChange={(e) => updateObjectField(obj.id, 'valueHigh', e.target.value)}
@@ -708,21 +732,27 @@ const CreateSimulation = () => {
                             <Select 
                               value={obj.action || ""} 
                               onValueChange={(value) => updateObjectAction(obj.id, value)}
+                              disabled={obj.isNew}
                             >
                               <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select action" />
+                                <SelectValue placeholder={obj.isNew ? "Add" : "Select action"} />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="Add">Add</SelectItem>
-                                <SelectItem value="Change">Change</SelectItem>
-                                <SelectItem value="Remove">Remove</SelectItem>
+                                {obj.isNew ? (
+                                  <SelectItem value="Add">Add</SelectItem>
+                                ) : (
+                                  <>
+                                    <SelectItem value="Change">Change</SelectItem>
+                                    <SelectItem value="Remove">Remove</SelectItem>
+                                  </>
+                                )}
                               </SelectContent>
                             </Select>
                           </TableCell>
                         )}
                         {isEditing && (
                           <TableCell>
-                            {obj.action && obj.action !== "Remove" && (
+                            {obj.action && obj.action !== "Remove" && !obj.isNew && (
                               <Select 
                                 value={obj.newValue || ""} 
                                 onValueChange={(value) => updateObjectNewValue(obj.id, value)}
@@ -738,6 +768,9 @@ const CreateSimulation = () => {
                                   ))}
                                 </SelectContent>
                               </Select>
+                            )}
+                            {obj.isNew && (
+                              <span className="text-gray-400">-</span>
                             )}
                           </TableCell>
                         )}

@@ -89,6 +89,14 @@ const RoleOptimization = () => {
     setSelectedLicenses([]);
     setRatioValue("");
   };
+
+  const handleRatioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Only allow positive numbers (integers and decimals)
+    if (value === "" || (parseFloat(value) > 0 && !isNaN(parseFloat(value)))) {
+      setRatioValue(value);
+    }
+  };
   
   return (
     <Layout title="Role Level License Optimization">
@@ -129,10 +137,12 @@ const RoleOptimization = () => {
                     Ratio
                   </label>
                   <Input
-                    placeholder="Enter numeric ratio value"
+                    placeholder="Enter positive numeric ratio value"
                     value={ratioValue}
-                    onChange={(e) => setRatioValue(e.target.value)}
+                    onChange={handleRatioChange}
                     type="number"
+                    min="0"
+                    step="0.01"
                   />
                 </div>
               </div>
@@ -144,7 +154,7 @@ const RoleOptimization = () => {
                 <Button 
                   onClick={handleAnalyze} 
                   disabled={isLoading}
-                  className="bg-blue-600 hover:bg-blue-900 text-white"
+                  className="bg-blue-600 hover:bg-blue-800 text-white"
                 >
                   {isLoading ? (
                     <>
