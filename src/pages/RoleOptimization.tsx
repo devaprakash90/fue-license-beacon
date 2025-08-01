@@ -38,7 +38,8 @@ const RoleOptimization = () => {
   // Fetch optimization requests
   const { 
     data: requests = [], 
-    refetch: refetchRequests 
+    refetch: refetchRequests,
+    isRefetching 
   } = useQuery({
     queryKey: ['roleOptimizationRequests'],
     queryFn: () => getOptimizationRequests('role')
@@ -100,9 +101,12 @@ const RoleOptimization = () => {
     }
   };
 
-  const handleDialogClose = () => {
+  const handleDialogClose = async () => {
     setShowDialog(false);
-    refetchRequests();
+    // Add a small delay to make the refresh feel more realistic
+    setTimeout(() => {
+      refetchRequests();
+    }, 500);
   };
   
   return (
@@ -191,9 +195,14 @@ const RoleOptimization = () => {
               variant="outline" 
               size="sm" 
               onClick={() => refetchRequests()}
+              disabled={isRefetching}
               className="flex items-center gap-2"
             >
-              <RefreshCw className="h-4 w-4" />
+              {isRefetching ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <RefreshCw className="h-4 w-4" />
+              )}
               Refresh
             </Button>
           </div>
