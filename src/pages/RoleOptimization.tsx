@@ -6,8 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import OptimizationRequestsTable from "@/components/OptimizationRequestsTable";
-import { Loader2 } from "lucide-react";
+import { Loader2, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { OptimizationRequest, LicenseType, RatioOption } from "@/types/optimization";
 import { 
@@ -24,6 +25,8 @@ const RoleOptimization = () => {
   const [ratioValue, setRatioValue] = useState<string>("");
   const [isFilterOpen, setIsFilterOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
+  const [requestNumber, setRequestNumber] = useState<string>("");
   
   // Fixed license types as per requirements
   const licenseOptions = [
@@ -54,12 +57,11 @@ const RoleOptimization = () => {
         setIsLoading(false);
       }
     },
-    onSuccess: () => {
-      toast({
-        title: "Analysis Started",
-        description: "Your role optimization analysis request has been submitted.",
-      });
-      refetchRequests();
+    onSuccess: (requestId) => {
+      // Generate random request number and show dialog
+      const randomRequestNumber = `REQ-${Math.floor(Math.random() * 1000000).toString().padStart(6, '0')}`;
+      setRequestNumber(randomRequestNumber);
+      setShowDialog(true);
     },
     onError: (error) => {
       console.error("Error creating optimization request:", error);
@@ -96,6 +98,11 @@ const RoleOptimization = () => {
     if (value === "" || (/^\d+$/.test(value) && parseInt(value) >= 1 && parseInt(value) <= 100)) {
       setRatioValue(value);
     }
+  };
+
+  const handleDialogClose = () => {
+    setShowDialog(false);
+    refetchRequests();
   };
   
   return (
@@ -178,9 +185,38 @@ const RoleOptimization = () => {
         </Card>
         
         <div>
-          <h3 className="text-lg font-medium mb-4">Optimization Requests</h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-medium">Optimization Requests</h3>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => refetchRequests()}
+              className="flex items-center gap-2"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Refresh
+            </Button>
+          </div>
           <OptimizationRequestsTable requests={requests} requestType="role" />
         </div>
+
+        {/* Confirmation Dialog */}
+        <Dialog open={showDialog} onOpenChange={setShowDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Request Submitted</DialogTitle>
+            </DialogHeader>
+            <div className="py-4">
+              <p className="text-sm text-muted-foreground mb-2">
+                Request Number: <span className="font-mono font-medium">{requestNumber}</span>
+              </p>
+              <p>Your request has been submitted and analysis is in progress.</p>
+            </div>
+            <DialogFooter>
+              <Button onClick={handleDialogClose}>Ok</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </Layout>
   );
